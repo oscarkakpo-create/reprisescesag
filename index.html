@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Reprises — CESAG</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<style>
+:root{
+  --g:#0b6b3a; --g2:#16a34a; --b:#0a4ea1; --b2:#1d6fdf;
+  --red:#c0392b; --amber:#d97706;
+  --bg:#eef2f7; --card:#fff; --border:#dde4ee;
+  --text:#1a2536; --muted:#5a6a80;
+  --input-bg:#fff; --hint-bg:#fffbeb;
+  --r:12px; --shadow:0 2px 14px rgba(10,40,80,.09);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f172a; --card:#1e293b; --border:#334155;
+    --text:#e2e8f0; --muted:#94a3b8;
+    --input-bg:#0f172a; --hint-bg:#1c2a1a;
+    --shadow:0 2px 14px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:24px 16px}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.hero{background:linear-gradient(125deg,var(--g),var(--b));color:#fff;border-radius:16px;padding:22px 24px;box-shadow:0 10px 30px rgba(10,40,80,.18)}
+.hero .eyebrow{font-size:11px;letter-spacing:.09em;text-transform:uppercase;opacity:.85;font-weight:700}
+.hero h1{font-size:24px;font-weight:800;margin:4px 0 4px}
+.hero .sub{font-size:13px;opacity:.92}
+.card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
+.step-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--b)}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+label{font-size:13px;font-weight:600;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row .field{flex:1 1 200px}
+select,input[type=search],input[type=text],input[type=email],input[type=tel],input[type=number]{
+  font:inherit;font-size:15px;padding:10px 11px;border-radius:8px;
+  border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);width:100%;
+}
+select:focus,input:focus{outline:2px solid var(--b);outline-offset:1px;border-color:var(--b)}
+input.invalid{border-color:var(--red)}
+.mat-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.mat-tools button{font:inherit;font-size:12px;font-weight:700;padding:6px 10px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--b);cursor:pointer}
+.mat-tools .count{font-size:12px;color:var(--muted);margin-left:auto}
+.mat-group h3{font-size:13px;color:var(--g);font-weight:800;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.mat-row{display:flex;align-items:flex-start;gap:10px;padding:9px 10px;border:1.5px solid var(--border);border-radius:8px;margin-bottom:7px;background:var(--input-bg);cursor:pointer}
+.mat-row input[type=checkbox]{width:17px;height:17px;flex-shrink:0;margin-top:2px;accent-color:var(--g)}
+.mat-row .mname{flex:1;min-width:0;font-size:14px;color:var(--text);font-weight:500}
+.mat-row .mh{font-family:"Consolas","Courier New",monospace;font-size:12px;color:var(--muted);white-space:nowrap}
+.empty-note{font-size:13px;color:var(--muted);font-style:italic}
+.manual-fields{display:flex;flex-direction:column;gap:12px;margin-top:12px;padding:12px;border:1.5px dashed var(--border);border-radius:10px}
+.mrow{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding:9px 10px;border:1.5px solid var(--border);border-radius:8px;margin-bottom:7px;background:var(--input-bg)}
+.mrow .field{flex:2 1 200px}
+.mrow .field.narrow{flex:1 1 90px}
+.mrow button.remove{font:inherit;font-size:12px;font-weight:700;padding:9px 10px;border-radius:8px;border:1.5px solid #fca5a5;background:transparent;color:var(--red);cursor:pointer}
+button.add-row{font:inherit;font-size:13px;font-weight:700;padding:9px 12px;border-radius:8px;border:1.5px dashed var(--b);background:transparent;color:var(--b);cursor:pointer;align-self:flex-start}
+.recap{background:var(--hint-bg);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.recap-line{display:flex;justify-content:space-between;font-size:14px;gap:10px}
+.recap-line .v,.recap-total .tv{white-space:nowrap;font-family:"Consolas","Courier New",monospace;font-variant-numeric:tabular-nums}
+.recap-total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed var(--border);padding-top:9px;margin-top:2px}
+.recap-total .tl{font-size:13px;color:var(--muted)}
+.recap-total .tv{font-size:22px;font-weight:800;color:var(--g)}
+button.primary{font:inherit;font-size:15px;font-weight:700;padding:13px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--g),var(--b));color:#fff;cursor:pointer;width:100%}
+button.primary:disabled{opacity:.45;cursor:not-allowed}
+button.primary:not(:disabled):hover{filter:brightness(1.08)}
+button.ghost{font:inherit;font-size:14px;font-weight:700;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--text);cursor:pointer}
+.hint{font-size:12px;color:var(--muted);line-height:1.5}
+.err{font-size:12px;color:var(--red);font-weight:600}
+.status{font-size:13px;font-weight:600;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border)}
+.status.ok{color:var(--g);border-color:var(--g)}
+.status.wait{color:var(--amber);border-color:var(--amber)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+/* Document généré (aperçu) */
+.doc{background:#fff;color:#1a2536;border:1.5px solid var(--border);border-radius:var(--r);padding:22px}
+.doc-head{text-align:center;border-bottom:3px solid var(--g);padding-bottom:12px;margin-bottom:16px}
+.doc-head .inst{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#5a6a80;font-weight:700}
+.doc-head h2{font-size:20px;margin-top:4px;color:var(--b)}
+.doc-ref{font-family:"Consolas","Courier New",monospace;font-size:12px;color:#5a6a80;text-align:center;margin-bottom:14px}
+.doc p{font-size:14.5px;line-height:1.55;margin:0 0 10px}
+.doc table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+.doc th,.doc td{border:1px solid #dde4ee;padding:7px 9px;text-align:left}
+.doc th{background:#eef2f7;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#5a6a80}
+.doc .num{text-align:right;font-family:"Consolas","Courier New",monospace;font-variant-numeric:tabular-nums}
+.doc tfoot td{font-weight:800;background:#f0fdf4}
+.doc .exo{background:#fffbeb;border:1px solid #dde4ee;border-radius:8px;padding:10px 12px;font-size:13.5px}
+.doc .contact{font-size:13px;color:#5a6a80}
+.sig{display:flex;justify-content:space-between;margin-top:26px;gap:20px}
+.sig div{flex:1;font-size:12px;color:#5a6a80}
+.sig .line{border-top:1px solid #8a97a8;margin-top:34px;padding-top:4px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.actions button{flex:1 1 180px}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--g);color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:50}
+.toast.show{opacity:1}
+[hidden]{display:none!important}
+@media print{
+  .hero,.actions,.hint,.status,#form,#program-card,.step-label{display:none!important}
+  body{background:#fff;padding:0}
+  .card,.doc{border:none;box-shadow:none;padding:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">CESAG — DPGELM</div>
+    <h1>Demande de reprise de matière(s)</h1>
+    <div class="sub" id="bar-sub">Choisissez votre programme et votre niveau pour accéder à votre formulaire de reprise.</div>
+  </header>
+
+  <section class="card" id="program-card">
+    <div class="step-label"><span class="step-num">0</span>Programme concerné</div>
+    <div class="row">
+      <div class="field">
+        <label for="prog-select">Programme</label>
+        <select id="prog-select"><option value="" disabled selected>Choisir un programme…</option></select>
+      </div>
+      <div class="field">
+        <label for="niveau-select">Niveau / classe</label>
+        <select id="niveau-select" disabled><option value="" disabled selected>Choisir d'abord un programme…</option></select>
+      </div>
+    </div>
+  </section>
+
+  <form id="form" class="card" hidden novalidate>
+    <div class="hp" aria-hidden="true"><label>Ne pas remplir <input type="text" id="website" tabindex="-1" autocomplete="off"></label></div>
+
+    <div>
+      <div class="step-label"><span class="step-num">1</span>Identification</div>
+      <div class="field" id="student-field" style="margin-top:10px">
+        <label for="student">Étudiant(e) concerné(e)</label>
+        <input id="student-search" type="search" placeholder="Rechercher votre nom…" autocomplete="off" aria-label="Rechercher votre nom dans la liste">
+        <select id="student" required><option value="" disabled selected>Choisir votre nom…</option></select>
+      </div>
+      <div id="manual-fields" class="manual-fields" hidden>
+        <p class="hint" id="manual-fields-hint"></p>
+        <div class="row">
+          <div class="field"><label for="m-nom">Nom</label><input id="m-nom" type="text" placeholder="Nom de famille" autocomplete="family-name"></div>
+          <div class="field"><label for="m-prenom">Prénom(s)</label><input id="m-prenom" type="text" placeholder="Prénom(s)" autocomplete="given-name"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="m-code">N° étudiant (si connu)</label><input id="m-code" type="text" placeholder="laisser vide si inconnu"></div>
+          <div class="field"><label for="m-promo">Classe et promotion</label><input id="m-promo" type="text" placeholder="ex. LPSG2 EGP, promotion 2023-2024"></div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="prenom.nom@mail.com" autocomplete="email" required>
+          <span class="err" id="email-err" hidden>Adresse email invalide.</span>
+        </div>
+        <div class="field">
+          <label for="tel">Téléphone</label>
+          <input id="tel" type="tel" placeholder="+221 7X XXX XX XX" autocomplete="tel" required>
+          <span class="err" id="tel-err" hidden>Numéro invalide (au moins 8 chiffres).</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="step-label"><span class="step-num">2</span>Matières à reprendre</div>
+      <div id="matieres" style="margin-top:10px"></div>
+    </div>
+
+    <div>
+      <div class="step-label"><span class="step-num">3</span>Récapitulatif</div>
+      <div class="recap" style="margin-top:10px">
+        <div class="recap-line"><span>Volume horaire total</span><span class="v" id="r-heures">0 h</span></div>
+        <div class="recap-line"><span id="r-tarif-label">Coût pédagogique</span><span class="v" id="r-cout">0 F</span></div>
+        <div class="recap-line"><span>Frais d'inscription à la reprise</span><span class="v" id="r-frais">0 F</span></div>
+        <div class="recap-total"><span class="tl">Total à régler</span><span class="tv" id="r-total">0 F</span></div>
+      </div>
+      <label class="mat-row" for="exo-check" style="margin-top:10px">
+        <input type="checkbox" id="exo-check">
+        <span class="mname">Je sollicite une exonération (totale ou partielle) de ces frais — maladie ou inscription tardive, sur justificatif</span>
+      </label>
+      <div id="exo-fields" class="manual-fields" hidden>
+        <div class="field">
+          <label for="exo-motif">Motif de l'exonération</label>
+          <select id="exo-motif">
+            <option value="">Choisir un motif…</option>
+            <option value="Inscription tardive">Inscription tardive (justificatif requis)</option>
+            <option value="Maladie">Maladie (certificat médical requis)</option>
+          </select>
+        </div>
+        <p class="hint">Le montant ci-dessus reste affiché à titre indicatif et sera ajusté par le secrétariat après examen du justificatif joint.</p>
+      </div>
+    </div>
+
+    <button type="submit" class="primary" id="submit-btn" disabled>Valider ma demande et générer ma facture</button>
+    <p class="hint">En validant, vous confirmez les matières ci-dessus. Vous devrez ensuite télécharger ou imprimer votre fiche, la signer et la remettre au secrétariat. Rien n'est enregistré sur ce site.</p>
+  </form>
+
+  <section id="result" hidden class="card">
+    <div class="step-label"><span class="step-num">✓</span>Demande générée</div>
+    <div class="status" id="send-status" hidden></div>
+    <div id="doc" class="doc"></div>
+    <div class="actions">
+      <button class="primary" id="download-btn" type="button">Télécharger ma fiche</button>
+      <button class="primary" id="print-btn" type="button">Imprimer</button>
+      <button class="ghost" id="json-btn" type="button" hidden>Télécharger le fichier .json</button>
+      <button class="ghost" id="restart-btn" type="button">Nouvelle demande</button>
+    </div>
+    <p class="hint">Téléchargez ou imprimez votre fiche, signez-la et remettez-la au secrétariat. Aucune donnée n'est conservée sur ce site : si vous fermez la page, refaites la demande.</p>
+  </section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+// Configuration du formulaire de reprise.
+// ENDPOINT_URL : URL du déploiement Google Apps Script (voir README.md, étape 2).
+// Laisser vide = aucun envoi automatique : l'étudiant télécharge/imprime son document
+// et peut aussi télécharger un fichier .json à transmettre au secrétariat.
+"use strict";
+window.REPRISE_CONFIG = {
+  ENDPOINT_URL: "",
+  TARIF_HEURE: 2500,
+  FRAIS_INSCRIPTION: 25000
+};
+
+</script>
+<script>
+// Programmes de reprise — CESAG DPGELM (catalogues matières/heures, SANS liste nominative).
+// Pour ajouter un programme : dupliquer une entrée { id, programme, niveau, anneeAcademique, promoLabel, manualOnly:true, students:[], catalog:[{sem,nom,h}] }.
+"use strict";
+window.PROGRAMS = [
+  {
+    id: "lpsg-egp3",
+    programme: "Licence en Gestion (LPSG)",
+    niveau: "LPSG3 — Entrepreneuriat et Gestion des Projets (EGP)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LPSG3 EGP, promotion 2026-2027",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:5, nom:"Anglais Général des affaires - TOEFL/TOEIC", h:30},
+      {sem:5, nom:"Crowdfunding", h:15},
+      {sem:5, nom:"Excel appliqué à la gestion des projets", h:15},
+      {sem:5, nom:"Financement bancaire", h:10},
+      {sem:5, nom:"Gestion de l'échéancier", h:15},
+      {sem:5, nom:"Gestion de l'intégration du projet", h:15},
+      {sem:5, nom:"Gestion des ressources matérielles et de l'approvisionnement", h:15},
+      {sem:5, nom:"Gestion du périmètre de projet", h:15},
+      {sem:5, nom:"Passation de marché", h:15},
+      {sem:5, nom:"Planification opérationnelle avec MS Project", h:15},
+      {sem:6, nom:"Anglais de spécialité", h:30},
+      {sem:6, nom:"Conférence actualité", h:5},
+      {sem:6, nom:"Contrôle de projet", h:15},
+      {sem:6, nom:"Gestion des projets internationaux", h:20},
+      {sem:6, nom:"Jeu d'entreprise", h:20},
+      {sem:6, nom:"Langue vivante 2", h:20},
+      {sem:6, nom:"Stage / Projet tutoré / Incubation", h:0},
+      {sem:6, nom:"Suivi et évaluation des projets", h:30}
+    ]
+  },
+  {
+    id: "cca",
+    programme: "Licence en Gestion (LPSG)",
+    niveau: "LPSG3 — Comptabilité, Contrôle, Audit (CCA) — classes A, B et C",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LPSG3 CCA (A/B/C), promotion 2026-2027",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:5, nom:"Analyse et choix des modes d'investissement et de financement", h:30},
+      {sem:5, nom:"Analyse financière", h:20},
+      {sem:5, nom:"Anglais général des affaires", h:30},
+      {sem:5, nom:"Comptabilité financière : comptabilité approfondie 1", h:30},
+      {sem:5, nom:"Comptabilité financière : travaux de fin d'exercice", h:30},
+      {sem:5, nom:"Droit OHADA", h:20},
+      {sem:5, nom:"Fiscalité des entreprises", h:20},
+      {sem:5, nom:"Fiscalité des personnes physiques", h:10},
+      {sem:5, nom:"Introduction à l'audit et au contrôle", h:30},
+      {sem:5, nom:"Introduction au contrôle de gestion", h:20},
+      {sem:5, nom:"Projet tutoré", h:10},
+      {sem:5, nom:"Rapport de stage (Méthodologie de Rédaction)", h:15},
+      {sem:5, nom:"Rapports collectifs de travail", h:10},
+      {sem:5, nom:"Rapports individuels de travail", h:10},
+      {sem:5, nom:"Stratégie d'entreprise", h:20},
+      {sem:5, nom:"Technique de communication en entreprise", h:20},
+      {sem:6, nom:"Anglais professionnel", h:30},
+      {sem:6, nom:"Certification sur les normes comptables-IFRS", h:10},
+      {sem:6, nom:"Comptabilité analytique", h:20},
+      {sem:6, nom:"Comptabilité des sociétés et des groupes", h:30},
+      {sem:6, nom:"Contrôle de gestion", h:30},
+      {sem:6, nom:"Démarche d'audit externe", h:20},
+      {sem:6, nom:"Démarche d'audit interne", h:20},
+      {sem:6, nom:"Elaboration / gestion budgétaire", h:20},
+      {sem:6, nom:"Gestion de la trésorerie", h:20},
+      {sem:6, nom:"Jeu d'entreprise", h:30},
+      {sem:6, nom:"Langue vivante 2", h:20},
+      {sem:6, nom:"Logiciels comptables", h:30},
+      {sem:6, nom:"Marché financier : Introduction aux outils d'analyse", h:20},
+      {sem:6, nom:"Normes comptables internationales (IFRS)", h:20},
+      {sem:6, nom:"Soutenance / Rapport de stage", h:0}
+    ]
+  },
+  {
+    id: "ltcf",
+    programme: "Licence en Gestion (LPSG)",
+    niveau: "LPSG3 — Techniques Comptables et Financières (LTCF)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LPSG3 LTCF, promotion 2026-2027",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:5, nom:"Analyse et choix des investissements", h:20},
+      {sem:5, nom:"Analyse et choix des modes d'investissement et de financement", h:20},
+      {sem:5, nom:"Analyse financière", h:20},
+      {sem:5, nom:"Comptabilité financière : comptabilité approfondie 1", h:30},
+      {sem:5, nom:"Comptabilité financière : travaux de fin d'exercice", h:30},
+      {sem:5, nom:"Comptabilité financière 1 (Opérations courantes)", h:30},
+      {sem:5, nom:"Droit OHADA", h:30},
+      {sem:5, nom:"Évaluation d'entreprise", h:20},
+      {sem:5, nom:"Fiscalité des entreprises", h:30},
+      {sem:5, nom:"Fiscalité des personnes physiques", h:30},
+      {sem:5, nom:"Organisation comptable et États financiers de synthèse", h:20},
+      {sem:6, nom:"Anglais professionnel", h:40},
+      {sem:6, nom:"Comptabilité de gestion", h:30},
+      {sem:6, nom:"Comptabilité des sociétés et des groupes", h:20},
+      {sem:6, nom:"Contrôle de gestion", h:30},
+      {sem:6, nom:"Elaboration / gestion budgétaire", h:20},
+      {sem:6, nom:"Logiciels comptables", h:30},
+      {sem:6, nom:"Méthodologie de l'audit", h:20},
+      {sem:6, nom:"Normes comptables internationales (IFRS)", h:30},
+      {sem:6, nom:"Soutenance / Rapport de stage", h:0}
+    ]
+  },
+  {
+    id: "tbf",
+    programme: "Licence en Gestion (LPSG)",
+    niveau: "LPSG3 — Techniques Bancaires et Financières (TBF)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LPSG3 TBF, promotion 2026-2027",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:5, nom:"Business English", h:30},
+      {sem:5, nom:"Business intelligence", h:15},
+      {sem:5, nom:"Data sciences", h:15},
+      {sem:5, nom:"Développement personnel", h:30},
+      {sem:5, nom:"Economie bancaire : structuration et pratiques", h:15},
+      {sem:5, nom:"Excel-VBA pour la finance", h:15},
+      {sem:5, nom:"Gestion et développement de la relation commerciale", h:15},
+      {sem:5, nom:"Marchés des assurances : structuration et pratiques", h:15},
+      {sem:5, nom:"Marchés financiers et bancaires : structuration et pratiques", h:15},
+      {sem:5, nom:"Mathématiques financières appliquées", h:20},
+      {sem:5, nom:"PYTHON 1 : Principes et programmation", h:15},
+      {sem:5, nom:"PYTHON 2", h:15},
+      {sem:5, nom:"Probabilités et statistiques", h:30},
+      {sem:5, nom:"Proposition de valeurs Retails & Corporate", h:15},
+      {sem:5, nom:"SQL", h:15},
+      {sem:5, nom:"Techniques d'expression", h:20},
+      {sem:5, nom:"Trade finance", h:15},
+      {sem:6, nom:"Architecture du web et développement côté client", h:15},
+      {sem:6, nom:"Conception du dispositif de contrôle de gestion bancaire", h:20},
+      {sem:6, nom:"Conformité et réglementation", h:20},
+      {sem:6, nom:"Développement d'applications avec les bases de données", h:15},
+      {sem:6, nom:"Garanties : Concept et familles", h:15},
+      {sem:6, nom:"Garanties et réglementation prudentielle", h:15},
+      {sem:6, nom:"Gestion des risques bancaires et financiers", h:20},
+      {sem:6, nom:"Gouvernance & Leadership", h:20},
+      {sem:6, nom:"Introduction à la Blockchain", h:15},
+      {sem:6, nom:"Mise en œuvre du dispositif de contrôle de gestion bancaire", h:15},
+      {sem:6, nom:"Méthodes d'évaluation d'entreprise", h:20},
+      {sem:6, nom:"Méthodologie de rédaction du rapport", h:20},
+      {sem:6, nom:"Projet tutoré", h:20},
+      {sem:6, nom:"Techniques de financement de l'exploitation", h:20},
+      {sem:6, nom:"Techniques de financement des investissements", h:20},
+      {sem:6, nom:"e-banking", h:15},
+      {sem:6, nom:"e-finance", h:15}
+    ]
+  },
+  {
+    id: "lg1",
+    programme: "Licence en Gestion (LPSG)",
+    niveau: "LPSG1 — LG1",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LG1, promotion 2026-2027",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:1, nom:"Anglais des affaires", h:30},
+      {sem:1, nom:"Comptabilité générale 1: Analyse comptable des opérations courantes", h:30},
+      {sem:1, nom:"Droit et principes comptables", h:20},
+      {sem:1, nom:"Environnement numérique", h:10},
+      {sem:1, nom:"Introduction au droit", h:20},
+      {sem:1, nom:"Introduction au droit communautaire", h:15},
+      {sem:1, nom:"Introduction au management", h:20},
+      {sem:1, nom:"Introduction à l'Économie", h:20},
+      {sem:1, nom:"Introduction à la fiscalité", h:15},
+      {sem:1, nom:"Introduction à la gestion d'entreprise", h:20},
+      {sem:1, nom:"Mathématiques appliquées à la gestion", h:20},
+      {sem:1, nom:"Microéconomie", h:30},
+      {sem:1, nom:"Préparation Certification suite Office (Word,  Excel,  Powerpoint)", h:15},
+      {sem:1, nom:"Psychosociologie et comportement au sein des organisations", h:20},
+      {sem:1, nom:"Statistiques descriptives", h:20},
+      {sem:1, nom:"Techniques d’expression écrite et orale", h:20},
+      {sem:2, nom:"Anglais de spécialité", h:20},
+      {sem:2, nom:"Communication organisationnelle", h:15},
+      {sem:2, nom:"Comptabilité générale 2 : Travaux de fin d'exercice", h:30},
+      {sem:2, nom:"Droit des obligations", h:15},
+      {sem:2, nom:"Droit des sociétés", h:15},
+      {sem:2, nom:"Economie régionale", h:20},
+      {sem:2, nom:"Introduction au leadership", h:15},
+      {sem:2, nom:"Introduction au marketing", h:20},
+      {sem:2, nom:"Introduction aux études de marché", h:20},
+      {sem:2, nom:"Introduction à la fiscalité", h:15},
+      {sem:2, nom:"LV2", h:15},
+      {sem:2, nom:"Macroéconomie", h:30},
+      {sem:2, nom:"Mathématiques financières", h:20},
+      {sem:2, nom:"Méthodologie de rédaction de rapport de stage", h:15}
+    ]
+  },
+  {
+    id: "lcca1",
+    programme: "Licence en Gestion (LPSG)",
+    niveau: "LPSG1 — LCCA1",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LPSG1 CCA, promotion 2026-2027",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:1, nom:"Anglais général des affaires", h:20},
+      {sem:1, nom:"Comptabilité générale 1: Analyse comptable des opérations courantes", h:30},
+      {sem:1, nom:"Droit et principes comptables", h:20},
+      {sem:1, nom:"Environnement numérique", h:10},
+      {sem:1, nom:"Initiation à l'Audit et au contrôle", h:15},
+      {sem:1, nom:"Introduction au contrôle", h:15},
+      {sem:1, nom:"Introduction au droit", h:20},
+      {sem:1, nom:"Introduction au droit communautaire", h:15},
+      {sem:1, nom:"Introduction au management", h:20},
+      {sem:1, nom:"Introduction à l'Audit", h:15},
+      {sem:1, nom:"Introduction à l'Économie", h:20},
+      {sem:1, nom:"Introduction à la fiscalité", h:15},
+      {sem:1, nom:"Introduction à la gestion d'entreprise", h:20},
+      {sem:1, nom:"Mathématiques appliquées à la gestion", h:20},
+      {sem:1, nom:"Microéconomie", h:30},
+      {sem:1, nom:"Préparation Certification suite Office (Word,  Excel,  Powerpoint)", h:15},
+      {sem:1, nom:"Psychosociologie et comportement au sein des organisations", h:20},
+      {sem:1, nom:"Statistiques descriptives", h:20},
+      {sem:1, nom:"Techniques d’expression écrite et orale", h:20},
+      {sem:2, nom:"Anglais de spécialité", h:20},
+      {sem:2, nom:"Communication organisationnelle", h:15},
+      {sem:2, nom:"Comptabilité générale 2 : Travaux de fin d'exercice", h:30},
+      {sem:2, nom:"Droit des obligations", h:15},
+      {sem:2, nom:"Droit des sociétés", h:15},
+      {sem:2, nom:"Economie régionale", h:20},
+      {sem:2, nom:"Introduction au leadership", h:15},
+      {sem:2, nom:"Introduction au marketing", h:20},
+      {sem:2, nom:"Introduction aux études de marché", h:20},
+      {sem:2, nom:"LV2", h:15},
+      {sem:2, nom:"Langue vivante 2", h:20},
+      {sem:2, nom:"Macroéconomie", h:30},
+      {sem:2, nom:"Mathématiques financières", h:20},
+      {sem:2, nom:"Méthodologie de rédaction de rapport de stage", h:15}
+    ]
+  },
+  {
+    id: "lg2",
+    programme: "Licence en Gestion (LPSG)",
+    niveau: "LPSG2 — LG2",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LG2, promotion 2026-2027",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:3, nom:"Anglais des affaires", h:30},
+      {sem:3, nom:"Commerce international", h:20},
+      {sem:3, nom:"Comptabilité analytique", h:20},
+      {sem:3, nom:"Droit de travail dans les secteurs publics et privés", h:20},
+      {sem:3, nom:"Droit des affaires", h:20},
+      {sem:3, nom:"Droit du numérique et gouvernance des données", h:15},
+      {sem:3, nom:"Fondementaux de la gestion des investissements", h:20},
+      {sem:3, nom:"Fondements RH", h:30},
+      {sem:3, nom:"Gestion budgétaire", h:30},
+      {sem:3, nom:"Gestion de production", h:20},
+      {sem:3, nom:"Gestion de trésorerie à court terme", h:20},
+      {sem:3, nom:"Gestion des Opérations", h:20},
+      {sem:3, nom:"Introduction à l'analyse financière", h:30},
+      {sem:3, nom:"Introduction à la comptabilité analytique", h:20},
+      {sem:3, nom:"Introduction à la finance de marchés", h:20},
+      {sem:3, nom:"Introduction à la gestion de Projets", h:20},
+      {sem:3, nom:"Leadership : Communication et négociation", h:15},
+      {sem:3, nom:"Outils d'intelligence artificielle pour manager", h:15},
+      {sem:3, nom:"Rédaction administrative", h:20},
+      {sem:3, nom:"États Financiers de Synthèse", h:30},
+      {sem:4, nom:"Comptabilité des Sociétés", h:30},
+      {sem:4, nom:"Entreprenariat et éthique des affaires", h:20},
+      {sem:4, nom:"Fondementaux de la gestion des investissements", h:20},
+      {sem:4, nom:"Gestion de production", h:20},
+      {sem:4, nom:"Gestion de trésorerie à court terme", h:20},
+      {sem:4, nom:"Introduction au marketing digital", h:15},
+      {sem:4, nom:"MS Access", h:20},
+      {sem:4, nom:"Marketing mixte", h:20},
+      {sem:4, nom:"Méthodologie de rédaction de rapport de stage", h:20},
+      {sem:4, nom:"Recherche opérationnelle", h:30},
+      {sem:4, nom:"Rédaction administrative", h:20},
+      {sem:4, nom:"Système de gestion de bases de données", h:20},
+      {sem:4, nom:"Technique de Recherche d'emploi", h:15},
+      {sem:4, nom:"États Financiers de Synthèse", h:30}
+    ]
+  },
+  {
+    id: "lcca2",
+    programme: "Licence en Gestion (LPSG)",
+    niveau: "LPSG2 — LCCA2",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LPSG2 CCA, promotion 2026-2027",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:3, nom:"Anglais des affaires", h:30},
+      {sem:3, nom:"Commerce international", h:20},
+      {sem:3, nom:"Comptabilité analytique", h:30},
+      {sem:3, nom:"Droit de travail dans les secteurs publics et privés", h:20},
+      {sem:3, nom:"Droit des affaires", h:20},
+      {sem:3, nom:"Droit du numérique et gouvernance des données", h:15},
+      {sem:3, nom:"Fondementaux de la gestion des investissements", h:20},
+      {sem:3, nom:"Fondements RH", h:30},
+      {sem:3, nom:"Gestion budgétaire", h:30},
+      {sem:3, nom:"Gestion des Opérations", h:20},
+      {sem:3, nom:"Introduction à l'analyse financière", h:30},
+      {sem:3, nom:"Introduction à la finance de marchés", h:20},
+      {sem:3, nom:"Introduction à la gestion de Projets", h:20},
+      {sem:3, nom:"Leadership : Communication et négociation", h:15},
+      {sem:3, nom:"Outils d'intelligence artificielle pour manager", h:15},
+      {sem:4, nom:"Analyse et choix des modes d'investissement et de financement", h:20},
+      {sem:4, nom:"Comptabilité des Sociétés", h:30},
+      {sem:4, nom:"Entreprenariat et éthique des affaires", h:20},
+      {sem:4, nom:"Fondements de l'audit interne", h:20},
+      {sem:4, nom:"Fondements du contrôle interne", h:15},
+      {sem:4, nom:"Gestion de production", h:20},
+      {sem:4, nom:"Gestion de trésorerie", h:20},
+      {sem:4, nom:"MS Access", h:20},
+      {sem:4, nom:"Méthodologie de rédaction de rapport de stage", h:20},
+      {sem:4, nom:"Recherche opérationnelle", h:30},
+      {sem:4, nom:"Rédaction administrative", h:20},
+      {sem:4, nom:"Système de gestion de bases de données", h:20},
+      {sem:4, nom:"Technique de Recherche d'emploi", h:15},
+      {sem:4, nom:"États Financiers de Synthèse", h:30}
+    ]
+  }
+];
+
+</script>
+<script>
+(function(){
+  "use strict";
+
+  var CFG = window.REPRISE_CONFIG;
+  var PROGRAMS = window.PROGRAMS;
+  var TARIF_HEURE = CFG.TARIF_HEURE;
+  var FRAIS_INSCRIPTION = CFG.FRAIS_INSCRIPTION;
+  var CUSTOM_MODULE = '__custom__';
+  var QUEUE_KEY = 'cesag-reprise-file-attente';
+
+  var $ = function(id){ return document.getElementById(id); };
+  var fmt = function(n){ return n.toLocaleString('fr-FR') + ' F'; };
+  function esc(v){
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  var activeProgram = null;
+  var STUDENTS = [];
+  var MODULE_CATALOG = [];
+  var current = null;      // index d'étudiant, 'autre' ou null
+  var manualRows = [];     // {id, matId, customNom, sem, h}
+  var manualRowSeq = 0;
+  var lastSubmission = null;
+
+  var progSel = $('prog-select'), niveauSel = $('niveau-select'), formEl = $('form');
+  var studentSel = $('student'), matieresEl = $('matieres'), manualFieldsEl = $('manual-fields');
+  var submitBtn = $('submit-btn'), exoCheck = $('exo-check'), exoFieldsEl = $('exo-fields'), exoMotif = $('exo-motif');
+
+  $('r-tarif-label').textContent = 'Coût pédagogique (' + TARIF_HEURE.toLocaleString('fr-FR') + ' F / heure)';
+  $('r-frais').textContent = fmt(FRAIS_INSCRIPTION);
+
+  // ---------- Catalogue ----------
+  function buildCatalog(prog){
+    var source = prog.catalog ? prog.catalog : [].concat.apply([], prog.students.map(function(s){ return s.matieres; }));
+    var seen = {}, list = [];
+    source.forEach(function(m){
+      if (!seen[m.nom]){ seen[m.nom] = true; list.push({ nom:m.nom, h:m.h, sem:m.sem }); }
+    });
+    return list.sort(function(a,b){ return a.nom.localeCompare(b.nom, 'fr'); });
+  }
+
+  // ---------- Sélection programme / niveau ----------
+  var programmeNames = [];
+  PROGRAMS.forEach(function(p){ if (programmeNames.indexOf(p.programme) === -1) programmeNames.push(p.programme); });
+  programmeNames.forEach(function(name){
+    var o = document.createElement('option'); o.value = name; o.textContent = name; progSel.appendChild(o);
+  });
+
+  function resetSelect(sel, placeholder){
+    sel.innerHTML = '';
+    var o = document.createElement('option');
+    o.value = ''; o.disabled = true; o.selected = true; o.textContent = placeholder;
+    sel.appendChild(o);
+  }
+
+  function populateNiveaux(programme){
+    resetSelect(niveauSel, 'Choisir un niveau…');
+    PROGRAMS.filter(function(p){ return p.programme === programme; }).forEach(function(p){
+      var o = document.createElement('option'); o.value = p.id; o.textContent = p.niveau; niveauSel.appendChild(o);
+    });
+    niveauSel.disabled = false;
+  }
+
+  function norm(s){ return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+
+  function populateStudentSelect(){
+    var q = norm($('student-search').value.trim());
+    resetSelect(studentSel, 'Choisir votre nom…');
+    STUDENTS.forEach(function(s, i){
+      var label = s.nom + ' ' + s.prenom;
+      if (q && norm(label).indexOf(q) === -1) return;
+      var o = document.createElement('option'); o.value = i; o.textContent = label; studentSel.appendChild(o);
+    });
+    var autre = document.createElement('option');
+    autre.value = 'autre'; autre.textContent = 'Autre — promotion antérieure / non listé(e)';
+    studentSel.appendChild(autre);
+  }
+
+  function activateProgram(prog){
+    activeProgram = prog;
+    STUDENTS = prog.students;
+    MODULE_CATALOG = buildCatalog(prog);
+    $('bar-sub').textContent = prog.programme + ' — ' + prog.niveau + ' — Année académique ' + prog.anneeAcademique;
+    $('student-search').value = '';
+    populateStudentSelect();
+    formEl.hidden = false;
+    manualRows = [];
+    if (prog.manualOnly){
+      $('student-field').hidden = true;
+      current = 'autre';
+      manualFieldsEl.hidden = false;
+      $('manual-fields-hint').textContent = "Indiquez vos informations ci-dessous, puis choisissez la ou les matière(s) à reprendre dans la section 2 (le volume horaire se remplit automatiquement).";
+      $('m-promo').value = prog.promoLabel;
+    } else {
+      $('student-field').hidden = false;
+      current = null;
+      manualFieldsEl.hidden = true;
+      $('manual-fields-hint').textContent = "Vous n'êtes pas dans la liste (promotion antérieure) : indiquez vos informations ci-dessous, puis ajoutez vous-même la ou les matière(s) à reprendre dans la section 2.";
+      $('m-promo').value = '';
+    }
+    renderMatieres();
+  }
+
+  $('student-search').addEventListener('input', function(){
+    populateStudentSelect();
+    var found = studentSel.options.length - 2; // sans placeholder ni « Autre »
+    if (found === 1){ studentSel.selectedIndex = 1; studentSel.dispatchEvent(new Event('change')); }
+    else if (current !== null){ current = null; manualFieldsEl.hidden = true; renderMatieres(); }
+  });
+
+  progSel.addEventListener('change', function(){
+    formEl.hidden = true;
+    $('bar-sub').textContent = 'Choisissez votre programme et votre niveau pour accéder à votre formulaire de reprise.';
+    populateNiveaux(progSel.value);
+  });
+  niveauSel.addEventListener('change', function(){
+    var prog = PROGRAMS.filter(function(p){ return p.id === niveauSel.value; })[0];
+    if (prog) activateProgram(prog);
+  });
+
+  // ---------- Matières (saisie manuelle) ----------
+  function findRow(id){ return manualRows.filter(function(r){ return r.id === id; })[0]; }
+  function catEntryOf(r){
+    return (r.matId !== '' && r.matId !== CUSTOM_MODULE) ? MODULE_CATALOG[parseInt(r.matId, 10)] : null;
+  }
+
+  function addManualRow(){
+    manualRowSeq += 1;
+    manualRows.push({ id: manualRowSeq, matId: MODULE_CATALOG.length ? '' : CUSTOM_MODULE, customNom:'', sem:'', h:'' });
+    renderManualRows();
+  }
+
+  function renderManualRows(){
+    var noCatalog = MODULE_CATALOG.length === 0;
+    var html = manualRows.map(function(r){
+      var isCustom = r.matId === CUSTOM_MODULE;
+      var cat = catEntryOf(r);
+      var hVal = cat ? cat.h : r.h;
+      var matField;
+      if (noCatalog){
+        matField = '<input type="text" data-field="customNom" data-row="' + r.id + '" value="' + esc(r.customNom) + '" placeholder="Intitulé de la matière">';
+      } else {
+        var opts = '<option value="" disabled' + (r.matId === '' ? ' selected' : '') + '>Choisir une matière…</option>';
+        MODULE_CATALOG.forEach(function(mc, i){
+          opts += '<option value="' + i + '"' + (String(r.matId) === String(i) ? ' selected' : '') + '>' + esc(mc.nom) + ' (' + mc.h + ' h)</option>';
+        });
+        opts += '<option value="' + CUSTOM_MODULE + '"' + (isCustom ? ' selected' : '') + '>Autre — module non listé…</option>';
+        matField = '<select data-field="matId" data-row="' + r.id + '">' + opts + '</select>' +
+          (isCustom ? '<input type="text" data-field="customNom" data-row="' + r.id + '" value="' + esc(r.customNom) + '" placeholder="Intitulé exact de la matière" style="margin-top:6px">' : '');
+      }
+      return '<div class="mrow">' +
+        '<div class="field"><label>Matière</label>' + matField + '</div>' +
+        '<div class="field narrow"><label>Semestre</label><input type="text" data-field="sem" data-row="' + r.id + '" value="' + esc(r.sem) + '" placeholder="ex. S1"></div>' +
+        '<div class="field narrow"><label>Heures' + (cat ? ' (auto)' : '') + '</label>' +
+        '<input type="number" min="0" step="1" data-field="h" data-row="' + r.id + '" value="' + esc(hVal) + '"' + (cat ? ' disabled' : '') + ' placeholder="h"></div>' +
+        '<button type="button" class="remove" data-remove="' + r.id + '" aria-label="Retirer cette matière">✕</button></div>';
+    }).join('');
+    html += '<button type="button" class="add-row" id="add-row-btn">+ Ajouter une matière</button>';
+    matieresEl.innerHTML = html;
+
+    matieresEl.querySelectorAll('select[data-field=matId]').forEach(function(sel){
+      sel.addEventListener('change', function(){
+        var row = findRow(parseInt(sel.dataset.row, 10));
+        if (!row) return;
+        row.matId = sel.value;
+        var cat = catEntryOf(row);
+        row.h = cat ? cat.h : '';
+        if (cat && cat.sem) row.sem = 'S' + cat.sem;
+        renderManualRows();
+        updateRecap();
+      });
+    });
+    matieresEl.querySelectorAll('input[data-row]').forEach(function(inp){
+      inp.addEventListener('input', function(){
+        var row = findRow(parseInt(inp.dataset.row, 10));
+        if (!row) return;
+        row[inp.dataset.field] = inp.value;
+        updateRecap();
+      });
+    });
+    matieresEl.querySelectorAll('button[data-remove]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var id = parseInt(btn.dataset.remove, 10);
+        manualRows = manualRows.filter(function(r){ return r.id !== id; });
+        renderManualRows();
+        updateRecap();
+      });
+    });
+    $('add-row-btn').addEventListener('click', addManualRow);
+  }
+
+  // ---------- Matières (liste officielle) ----------
+  function renderMatieres(){
+    if (current === null){
+      matieresEl.innerHTML = '<p class="empty-note">Sélectionnez d\'abord votre nom ci-dessus — la liste officielle de vos matières en reprise s\'affichera ici.</p>';
+    } else if (current === 'autre'){
+      if (!manualRows.length) addManualRow(); else renderManualRows();
+    } else {
+      var s = STUDENTS[current], bySem = {}, html = '<div class="mat-tools"><button type="button" id="check-all">Tout cocher</button><button type="button" id="check-none">Tout décocher</button><span class="count" id="mat-count"></span></div>';
+      s.matieres.forEach(function(m, idx){ (bySem[m.sem] = bySem[m.sem] || []).push({ m:m, idx:idx }); });
+      Object.keys(bySem).sort(function(a,b){ return a - b; }).forEach(function(sem){
+        html += '<div class="mat-group"><h3>Semestre ' + esc(sem) + '</h3>';
+        bySem[sem].forEach(function(e){
+          html += '<label class="mat-row" for="m' + e.idx + '">' +
+            '<input type="checkbox" id="m' + e.idx + '" data-idx="' + e.idx + '" checked>' +
+            '<span class="mname">' + esc(e.m.nom) + '</span>' +
+            '<span class="mh">' + (e.m.h > 0 ? e.m.h + ' h' : 'sans frais horaires') + '</span></label>';
+        });
+        html += '</div>';
+      });
+      matieresEl.innerHTML = html;
+      var boxes = matieresEl.querySelectorAll('input[type=checkbox]');
+      boxes.forEach(function(cb){ cb.addEventListener('change', updateRecap); });
+      var setAll = function(v){ boxes.forEach(function(cb){ cb.checked = v; }); updateRecap(); };
+      $('check-all').addEventListener('click', function(){ setAll(true); });
+      $('check-none').addEventListener('click', function(){ setAll(false); });
+    }
+    updateRecap();
+  }
+
+  function selectedMatieres(){
+    if (current === null) return [];
+    if (current === 'autre'){
+      return manualRows.map(function(r){
+        var cat = catEntryOf(r);
+        var nom = cat ? cat.nom : r.customNom.trim();
+        var h = cat ? cat.h : parseFloat(r.h);
+        return { sem: (r.sem || '').trim() || '—', nom: nom, h: h, custom: true, catalog: !!cat };
+      }).filter(function(m){ return m.nom && (m.catalog || m.h > 0); });
+    }
+    var s = STUDENTS[current], picked = [];
+    matieresEl.querySelectorAll('input[type=checkbox]:checked').forEach(function(b){
+      picked.push(s.matieres[parseInt(b.dataset.idx, 10)]);
+    });
+    return picked;
+  }
+
+  // ---------- Validation / récapitulatif ----------
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  function emailOk(){ return EMAIL_RE.test($('email').value.trim()); }
+  function telOk(){ return $('tel').value.replace(/\D/g, '').length >= 8; }
+  function manualIdentOk(){
+    return ['m-nom','m-prenom','m-promo'].every(function(id){ return $(id).value.trim().length > 0; });
+  }
+  function exemptionInfo(){ return exoCheck.checked ? { motif: exoMotif.value.trim() } : null; }
+
+  function totals(picked){
+    var heures = picked.reduce(function(a, m){ return a + m.h; }, 0);
+    var cout = heures * TARIF_HEURE;
+    return { heures: heures, cout: cout, frais: FRAIS_INSCRIPTION, total: cout + FRAIS_INSCRIPTION };
+  }
+
+  function updateRecap(){
+    var picked = selectedMatieres();
+    var t = totals(picked);
+    $('r-heures').textContent = t.heures + ' h';
+    $('r-cout').textContent = fmt(t.cout);
+    $('r-total').textContent = fmt(t.total);
+    var mc = $('mat-count'); if (mc) mc.textContent = picked.length + ' matière(s) sélectionnée(s)';
+    var exo = exemptionInfo();
+    var identOk = current === 'autre' ? manualIdentOk() : current !== null;
+    var exoOk = !exoCheck.checked || exo.motif.length > 0;
+    // Une demande peut ne contenir que des matières sans volume horaire (ex. soutenance) :
+    // on exige au moins une matière cochée, pas un volume > 0.
+    submitBtn.disabled = !(identOk && picked.length > 0 && emailOk() && telOk() && exoOk);
+  }
+
+  function flagField(id, errId, ok){
+    var v = $(id).value.trim();
+    var bad = v.length > 0 && !ok;
+    $(id).classList.toggle('invalid', bad);
+    $(errId).hidden = !bad;
+  }
+
+  studentSel.addEventListener('change', function(){
+    current = studentSel.value === '' ? null : (studentSel.value === 'autre' ? 'autre' : parseInt(studentSel.value, 10));
+    manualFieldsEl.hidden = current !== 'autre';
+    renderMatieres();
+  });
+  $('email').addEventListener('input', function(){ updateRecap(); });
+  $('email').addEventListener('blur', function(){ flagField('email', 'email-err', emailOk()); });
+  $('tel').addEventListener('input', function(){ updateRecap(); });
+  $('tel').addEventListener('blur', function(){ flagField('tel', 'tel-err', telOk()); });
+  ['m-nom','m-prenom','m-code','m-promo'].forEach(function(id){ $(id).addEventListener('input', updateRecap); });
+  exoCheck.addEventListener('change', function(){ exoFieldsEl.hidden = !exoCheck.checked; updateRecap(); });
+  exoMotif.addEventListener('change', updateRecap);
+
+  // ---------- Document ----------
+  function refNumber(code){
+    var d = new Date(), pad = function(n){ return String(n).padStart(2, '0'); };
+    var safe = String(code).replace(/[^A-Za-z0-9]/g, '') || 'NC';
+    return 'DR-' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + safe + '-' +
+      Math.random().toString(36).slice(2, 6).toUpperCase();
+  }
+
+  function getStudentInfo(){
+    if (current === 'autre'){
+      return { code: $('m-code').value.trim(), nom: $('m-nom').value.trim(), prenom: $('m-prenom').value.trim(),
+        promo: $('m-promo').value.trim(), horsListe: true };
+    }
+    var s = STUDENTS[current];
+    return { code: '', nom: s.nom, prenom: s.prenom, promo: activeProgram.promoLabel, horsListe: false };
+  }
+
+  function buildDocHTML(sub, standalone){
+    var s = sub.student, t = sub.totaux;
+    var rows = sub.picked.map(function(m){
+      var semLabel = m.custom ? m.sem : 'Semestre ' + m.sem;
+      return '<tr><td>' + esc(semLabel) + '</td><td>' + esc(m.nom) + '</td><td class="num">' + m.h + ' h</td><td class="num">' + fmt(m.h * TARIF_HEURE) + '</td></tr>';
+    }).join('');
+    var exoBlock = '';
+    if (sub.exo){
+      exoBlock = '<p class="exo"><strong>Demande d\'exonération des frais ci-dessus</strong> — motif : ' + esc(sub.exo.motif || '—') +
+        '. Montant affiché à titre indicatif ; sous réserve d\'examen du justificatif joint par le secrétariat.</p>' +
+        '<p><strong>Joindre obligatoirement le justificatif papier (certificat médical ou preuve d\'inscription tardive) à cette demande.</strong></p>' +
+        '<table><tbody><tr><td style="width:55%">Décision du secrétariat sur l\'exonération</td>' +
+        '<td>☐ Accordée (totale)&nbsp;&nbsp;☐ Accordée (partielle)&nbsp;&nbsp;☐ Refusée</td></tr>' +
+        '<tr><td>Nouveau montant à régler (si exonération accordée)</td><td>……………………… F</td></tr></tbody></table>';
+    }
+    var ident = s.code ? 'étudiant(e) n° ' + esc(s.code) + ', ' + esc(s.promo) : esc(s.promo);
+    var body =
+      '<div class="doc-head"><div class="inst">CESAG — Direction des Programmes Grande École, Licences et Masters</div>' +
+      '<h2>Demande de reprise &amp; facture associée</h2></div>' +
+      '<div class="doc-ref">Référence ' + esc(sub.ref) + ' · ' + esc(sub.dateStr) + '</div>' +
+      '<p>Je soussigné(e) <strong>' + esc(s.nom + ' ' + s.prenom) + '</strong>, ' + ident +
+      ', sollicite par la présente mon inscription à la session de reprise pour la ou les matière(s) listée(s) ci-dessous, conformément à la décision du jury.</p>' +
+      '<table><thead><tr><th>Semestre</th><th>Matière</th><th class="num">Volume</th><th class="num">Montant</th></tr></thead><tbody>' + rows + '</tbody>' +
+      '<tfoot><tr><td colspan="3">Frais d\'inscription à la reprise</td><td class="num">' + fmt(t.frais) + '</td></tr>' +
+      '<tr><td colspan="3">Total à régler</td><td class="num">' + fmt(t.total) + '</td></tr></tfoot></table>' +
+      exoBlock +
+      '<p class="contact">Contact : ' + esc(sub.email) + ' · ' + esc(sub.tel) + '</p>' +
+      '<div class="sig"><div><div class="line">Signature de l\'étudiant(e)</div></div><div><div class="line">Visa du secrétariat</div></div></div>';
+    if (!standalone) return body;
+    return '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' + esc(sub.ref) + '</title><style>' +
+      'body{font-family:"Segoe UI",Arial,sans-serif;max-width:700px;margin:40px auto;padding:0 20px;color:#1a2536}' +
+      '.doc-head{text-align:center;border-bottom:3px solid #0b6b3a;padding-bottom:12px;margin-bottom:16px}' +
+      '.doc-head h2{margin:4px 0 0;color:#0a4ea1;font-size:20px}' +
+      '.inst{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#5a6a80;font-weight:700}' +
+      '.doc-ref{font-family:Consolas,monospace;font-size:12px;color:#5a6a80;text-align:center;margin-bottom:14px}' +
+      'p{font-size:14.5px;line-height:1.55;margin:0 0 10px}' +
+      'table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}' +
+      'th,td{border:1px solid #dde4ee;padding:7px 9px;text-align:left}' +
+      'th{background:#eef2f7;font-size:11px;text-transform:uppercase;color:#5a6a80}' +
+      '.num{text-align:right;font-family:Consolas,monospace}' +
+      'tfoot td{font-weight:800;background:#f0fdf4}' +
+      '.exo{background:#fffbeb;border:1px solid #dde4ee;border-radius:8px;padding:10px 12px}' +
+      '.contact{font-size:13px;color:#5a6a80}' +
+      '.sig{display:flex;justify-content:space-between;margin-top:26px;gap:20px}' +
+      '.sig div{flex:1;font-size:12px;color:#5a6a80}' +
+      '.line{border-top:1px solid #8a97a8;margin-top:34px;padding-top:4px}' +
+      '</style></head><body>' + body + '</body></html>';
+  }
+
+  // ---------- Données structurées (JSON) ----------
+  function buildPayload(sub){
+    var s = sub.student;
+    return {
+      schema: 1,
+      ref: sub.ref,
+      submittedAt: sub.iso,
+      programme: { id: activeProgram.id, programme: activeProgram.programme, niveau: activeProgram.niveau,
+        anneeAcademique: activeProgram.anneeAcademique },
+      etudiant: { nom: s.nom, prenom: s.prenom, code: s.code, promo: s.promo, horsListe: s.horsListe },
+      contact: { email: sub.email, tel: sub.tel },
+      matieres: sub.picked.map(function(m){
+        return { sem: m.sem, nom: m.nom, h: m.h, montant: m.h * TARIF_HEURE, saisieLibre: !!m.custom };
+      }),
+      totaux: { heures: sub.totaux.heures, tarifHeure: TARIF_HEURE, coutPedagogique: sub.totaux.cout,
+        fraisInscription: sub.totaux.frais, total: sub.totaux.total },
+      exoneration: sub.exo ? { demandee: true, motif: sub.exo.motif } : null
+    };
+  }
+
+  function readQueue(){
+    try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]'); } catch (e) { return []; }
+  }
+  function writeQueue(q){
+    try { localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); } catch (e) { /* stockage indisponible */ }
+  }
+
+  // Envoi "no-cors" : la réponse est opaque (on ne peut pas la lire), mais Code.gs
+  // ignore les doublons par référence, donc un renvoi est sans risque.
+  function postPayload(payload){
+    return fetch(CFG.ENDPOINT_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+  }
+
+  function flushQueue(){
+    if (!CFG.ENDPOINT_URL) return Promise.resolve();
+    var q = readQueue();
+    if (!q.length) return Promise.resolve();
+    return q.reduce(function(chain, p){
+      return chain.then(function(){
+        return postPayload(p).then(function(){
+          writeQueue(readQueue().filter(function(x){ return x.ref !== p.ref; }));
+        });
+      });
+    }, Promise.resolve()).catch(function(){ /* on réessaiera */ });
+  }
+
+  function setStatus(kind, msg){
+    var el = $('send-status');
+    el.hidden = !msg;
+    el.className = 'status ' + kind;
+    el.textContent = msg || '';
+  }
+
+  function sendSubmission(payload){
+    if (!CFG.ENDPOINT_URL){
+      setStatus('', '');
+      return;
+    }
+    setStatus('wait', 'Envoi de votre demande au secrétariat…');
+    postPayload(payload).then(function(){
+      setStatus('ok', 'Votre demande a bien été transmise au secrétariat (réf. ' + payload.ref + ').');
+    }).catch(function(){
+      var q = readQueue(); q.push(payload); writeQueue(q);
+      setStatus('wait', "Envoi impossible pour l'instant (connexion). Votre demande sera renvoyée automatiquement à la prochaine ouverture de cette page ; vous pouvez aussi télécharger le fichier .json ci-dessous.");
+      $('json-btn').hidden = false;
+    });
+  }
+
+  // ---------- Soumission ----------
+  formEl.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (submitBtn.disabled) return;
+    if ($('website').value) return; // anti-robot : champ piège rempli
+    submitBtn.disabled = true;      // évite le double envoi
+    var s = getStudentInfo();
+    var picked = selectedMatieres();
+    var now = new Date();
+    lastSubmission = {
+      student: s, picked: picked, totaux: totals(picked),
+      ref: refNumber(s.code || 'NC'), iso: now.toISOString(),
+      dateStr: now.toLocaleDateString('fr-FR', { year:'numeric', month:'long', day:'numeric' }),
+      email: $('email').value.trim(), tel: $('tel').value.trim(), exo: exemptionInfo()
+    };
+    lastSubmission.payload = buildPayload(lastSubmission);
+    $('doc').innerHTML = buildDocHTML(lastSubmission, false);
+    formEl.hidden = true;
+    $('result').hidden = false;
+    $('json-btn').hidden = true;
+    window.scrollTo(0, 0);
+    sendSubmission(lastSubmission.payload);
+  });
+
+  function saveFile(content, type, name){
+    var url = URL.createObjectURL(new Blob([content], { type: type }));
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+  }
+
+  $('download-btn').addEventListener('click', function(){
+    if (!lastSubmission) return;
+    saveFile(buildDocHTML(lastSubmission, true), 'text/html', lastSubmission.ref + '.html');
+    showToast('Document téléchargé');
+  });
+  $('json-btn').addEventListener('click', function(){
+    if (!lastSubmission) return;
+    saveFile(JSON.stringify(lastSubmission.payload, null, 2), 'application/json', lastSubmission.ref + '.json');
+    showToast('Fichier .json téléchargé');
+  });
+  $('print-btn').addEventListener('click', function(){ window.print(); });
+  $('restart-btn').addEventListener('click', function(){
+    formEl.reset();
+    exoFieldsEl.hidden = true;
+    $('result').hidden = true;
+    ['email','tel'].forEach(function(id){ $(id).classList.remove('invalid'); });
+    $('email-err').hidden = true; $('tel-err').hidden = true;
+    lastSubmission = null;
+    if (activeProgram) activateProgram(activeProgram);
+    formEl.hidden = false;
+  });
+
+  function showToast(msg){
+    var t = $('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2400);
+  }
+
+  flushQueue();
+  window.addEventListener('online', flushQueue);
+})();
+
+</script>
+</body>
+</html>
