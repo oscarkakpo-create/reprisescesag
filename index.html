@@ -334,13 +334,20 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
         <span class="mname">Je sollicite une exonération (totale ou partielle) de ces frais — maladie ou inscription tardive, sur justificatif</span>
       </label>
       <div id="exo-fields" class="manual-fields" hidden>
-        <div class="field">
-          <label for="exo-motif">Motif de l'exonération</label>
-          <select id="exo-motif">
-            <option value="">Choisir un motif…</option>
-            <option value="Inscription tardive">Inscription tardive (justificatif requis)</option>
-            <option value="Maladie">Maladie (certificat médical requis)</option>
-          </select>
+        <div class="row">
+          <div class="field">
+            <label for="exo-motif">Motif de l'exonération</label>
+            <select id="exo-motif">
+              <option value="">Choisir un motif…</option>
+              <option value="Inscription tardive">Inscription tardive (justificatif requis)</option>
+              <option value="Maladie">Maladie (certificat médical requis)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="exo-file">📎 Joindre la preuve / justificatif (Photo ou PDF, optionnel)</label>
+            <input id="exo-file" type="file" accept="image/*,application/pdf" style="font-size:13px;padding:8px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--input-bg)">
+            <span class="hint" id="exo-file-info">Si vous joignez une photo (JPG/PNG), elle sera directement intégrée en Annexe (Page 2) de votre fiche PDF !</span>
+          </div>
         </div>
         <p class="hint">Le montant ci-dessus reste affiché à titre indicatif et sera ajusté par le secrétariat après examen du justificatif joint.</p>
       </div>
@@ -361,6 +368,7 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
     </div>
     <div class="actions-main">
       <button class="primary" id="pdf-btn" type="button">📥 Exporter ma demande en PDF</button>
+      <button class="secondary" id="email-sec-btn" type="button">✉️ Transmettre par email au secrétariat</button>
       <button class="secondary" id="print-btn" type="button">🖨️ Imprimer directement</button>
     </div>
     <div id="doc" class="doc"></div>
@@ -967,7 +975,37 @@ window.PROGRAMS = [
   function manualIdentOk(){
     return ['m-nom','m-prenom','m-promo'].every(function(id){ return $(id).value.trim().length > 0; });
   }
-  function exemptionInfo(){ return exoCheck.checked ? { motif: exoMotif.value.trim() } : null; }
+  var exoProof = null; // { name, type, dataUrl, isImage }
+  var exoFileEl = $('exo-file');
+  var exoFileInfoEl = $('exo-file-info');
+  if (exoFileEl){
+    exoFileEl.addEventListener('change', function(){
+      var f = exoFileEl.files && exoFileEl.files[0];
+      if (!f){
+        exoProof = null;
+        if (exoFileInfoEl) exoFileInfoEl.textContent = "Si vous joignez une photo (JPG/PNG), elle sera directement intégrée en Annexe (Page 2) de votre fiche PDF !";
+        return;
+      }
+      var isImage = /^image\//i.test(f.type);
+      var reader = new FileReader();
+      reader.onload = function(ev){
+        exoProof = { name: f.name, type: f.type, dataUrl: ev.target.result, isImage: isImage };
+        if (exoFileInfoEl){
+          exoFileInfoEl.textContent = isImage
+            ? '✓ Photo "' + f.name + '" prête : elle sera intégrée en Annexe (Page 2) de votre fiche PDF.'
+            : '✓ Fichier "' + f.name + '" sélectionné : sa référence figurera sur la fiche (pensez à le joindre à l\'email ou au dépôt papier).';
+        }
+      };
+      reader.readAsDataURL(f);
+    });
+  }
+
+  function exemptionInfo(){
+    if (!exoCheck.checked) return null;
+    var motifVal = exoMotif.value.trim();
+    var motifWithFile = exoProof ? (motifVal + ' [Pièce jointe : ' + exoProof.name + ']') : motifVal;
+    return { motif: motifWithFile, rawMotif: motifVal, proof: exoProof };
+  }
 
   function totals(picked){
     var heures = picked.reduce(function(a, m){ return a + m.h; }, 0);
@@ -1034,13 +1072,20 @@ window.PROGRAMS = [
       return '<tr><td>' + esc(semLabel) + '</td><td>' + esc(m.nom) + '</td><td class="num">' + m.h + ' h</td><td class="num">' + fmt(m.h * TARIF_HEURE) + '</td></tr>';
     }).join('');
     var exoBlock = '';
+    var annexBlock = '';
     if (sub.exo){
       exoBlock = '<p class="exo"><strong>Demande d\'exonération des frais ci-dessus</strong> — motif : ' + esc(sub.exo.motif || '—') +
         '. Montant affiché à titre indicatif ; sous réserve d\'examen du justificatif joint par le secrétariat.</p>' +
-        '<p><strong>Joindre obligatoirement le justificatif papier (certificat médical ou preuve d\'inscription tardive) à cette demande.</strong></p>' +
+        '<p><strong>Joindre obligatoirement le justificatif (certificat médical ou preuve d\'inscription tardive) à cette demande.</strong></p>' +
         '<table><tbody><tr><td style="width:55%">Décision du secrétariat sur l\'exonération</td>' +
         '<td>☐ Accordée (totale)&nbsp;&nbsp;☐ Accordée (partielle)&nbsp;&nbsp;☐ Refusée</td></tr>' +
         '<tr><td>Nouveau montant à régler (si exonération accordée)</td><td>……………………… F</td></tr></tbody></table>';
+      if (sub.exo.proof && sub.exo.proof.isImage && sub.exo.proof.dataUrl){
+        annexBlock = '<div class="doc-annex" style="page-break-before:always;margin-top:24px;padding-top:16px;border-top:2px dashed #cbd5e1">' +
+          '<p style="font-size:12px;font-weight:800;text-transform:uppercase;color:#0a4ea1;margin-bottom:8px">Annexe — Pièce justificative d\'exonération (' + esc(sub.ref) + ' · ' + esc(sub.exo.proof.name) + ')</p>' +
+          '<div style="text-align:center"><img src="' + sub.exo.proof.dataUrl + '" alt="Justificatif" style="max-width:100%;max-height:620px;border:1px solid #cbd5e1;border-radius:8px;padding:4px"></div>' +
+          '</div>';
+      }
     }
     var ident = s.code ? 'étudiant(e) n° ' + esc(s.code) + ', ' + esc(s.promo) : esc(s.promo);
     var qrPayload = 'CESAG-REPRISE|' + sub.ref + '|' + s.nom + ' ' + s.prenom + '|' + (s.code || 'NC') + '|TOTAL:' + t.total + 'F';
@@ -1067,7 +1112,8 @@ window.PROGRAMS = [
       exoBlock +
       '<p class="contact"><strong>Coordonnées de l\'étudiant(e) :</strong> ' + esc(sub.email) + ' · ' + esc(sub.tel) + '</p>' +
       '<p class="contact"><strong>Contacts Secrétariat DPGELM :</strong> mame.coulibaly@cesag.edu.sn · isabelle.Mandiouba@cesag.edu.sn · jean.agopome@cesag.edu.sn</p>' +
-      '<div class="sig"><div><div class="line">Signature de l\'étudiant(e)</div></div><div><div class="line">Visa du secrétariat</div></div></div>';
+      '<div class="sig"><div><div class="line">Signature de l\'étudiant(e)</div></div><div><div class="line">Visa du secrétariat</div></div></div>' +
+      annexBlock;
     if (!standalone) return body;
     return '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' + esc(sub.ref) + '</title><style>' +
       'body{font-family:"Segoe UI",Arial,sans-serif;max-width:720px;margin:32px auto;padding:0 20px;color:#1a2536}' +
@@ -1229,7 +1275,36 @@ window.PROGRAMS = [
     }
   }
 
+  function sendEmailToSecretariat(){
+    if (!lastSubmission) return;
+    var s = lastSubmission.student;
+    var t = lastSubmission.totaux;
+    var to = 'mame.coulibaly@cesag.edu.sn,isabelle.Mandiouba@cesag.edu.sn,jean.agopome@cesag.edu.sn';
+    var subject = '[Reprise CESAG ' + lastSubmission.ref + '] ' + s.nom + ' ' + s.prenom + ' — ' + (activeProgram ? activeProgram.niveau : s.promo);
+    var matList = lastSubmission.picked.map(function(m){
+      var semLabel = m.custom ? m.sem : ('S' + m.sem);
+      return '  - [' + semLabel + '] ' + m.nom + ' (' + m.h + ' h) : ' + fmt(m.h * TARIF_HEURE);
+    }).join('\n');
+    var exoLine = lastSubmission.exo
+      ? ('OUI — Motif : ' + lastSubmission.exo.motif + '\n(Veuillez trouver ci-joint ma fiche PDF signée ainsi que mon justificatif d\'exonération)')
+      : 'NON (Veuillez trouver ci-joint ma fiche PDF signée)';
+    var body =
+      'Bonjour au Secrétariat DPGELM,\n\n' +
+      'Je vous transmets par le présent message ma demande de reprise de matière(s) :\n\n' +
+      '• Référence : ' + lastSubmission.ref + '\n' +
+      '• Étudiant(e) : ' + s.nom + ' ' + s.prenom + (s.code ? ' (N° ' + s.code + ')' : '') + '\n' +
+      '• Classe / Promo : ' + s.promo + '\n' +
+      '• Contacts : ' + lastSubmission.email + ' / ' + lastSubmission.tel + '\n\n' +
+      'Matière(s) sélectionnée(s) :\n' + matList + '\n\n' +
+      '• Volume horaire total : ' + t.heures + ' h\n' +
+      '• Total à régler (frais d\'inscription inclus) : ' + fmt(t.total) + '\n' +
+      '• Demande d\'exonération : ' + exoLine + '\n\n' +
+      'Cordialement,\n' + s.nom + ' ' + s.prenom;
+    window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+
   $('pdf-btn').addEventListener('click', exportDirectPDF);
+  $('email-sec-btn').addEventListener('click', sendEmailToSecretariat);
   $('download-btn').addEventListener('click', function(){
     if (!lastSubmission) return;
     saveFile(buildDocHTML(lastSubmission, true), 'text/html', lastSubmission.ref + '.html');
@@ -1248,6 +1323,8 @@ window.PROGRAMS = [
     ['email','tel'].forEach(function(id){ $(id).classList.remove('invalid'); });
     $('email-err').hidden = true; $('tel-err').hidden = true;
     lastSubmission = null;
+    exoProof = null;
+    if (exoFileInfoEl) exoFileInfoEl.textContent = "Si vous joignez une photo (JPG/PNG), elle sera directement intégrée en Annexe (Page 2) de votre fiche PDF !";
     if (activeProgram) activateProgram(activeProgram);
     formEl.hidden = false;
   });
