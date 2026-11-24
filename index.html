@@ -5,100 +5,241 @@
 <title>Reprises — CESAG</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
 <style>
 :root{
-  --g:#0b6b3a; --g2:#16a34a; --b:#0a4ea1; --b2:#1d6fdf;
-  --red:#c0392b; --amber:#d97706;
-  --bg:#eef2f7; --card:#fff; --border:#dde4ee;
-  --text:#1a2536; --muted:#5a6a80;
-  --input-bg:#fff; --hint-bg:#fffbeb;
-  --r:12px; --shadow:0 2px 14px rgba(10,40,80,.09);
+  --g:#0b6b3a; --g2:#16a34a; --g-soft:#ecfdf5;
+  --b:#0a4ea1; --b2:#1d6fdf; --b-soft:#eff6ff;
+  --red:#dc2626; --amber:#d97706;
+  --bg:#f4f7fb; --card:#ffffff; --border:#e2e8f0;
+  --text:#0f172a; --muted:#475569;
+  --input-bg:#f8fafc; --hint-bg:#fffbeb;
+  --r:16px; --shadow:0 10px 30px -5px rgba(15,23,42,.06), 0 4px 12px -2px rgba(15,23,42,.04);
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark){
   :root{
-    --bg:#0f172a; --card:#1e293b; --border:#334155;
-    --text:#e2e8f0; --muted:#94a3b8;
+    --bg:#0b1120; --card:#1e293b; --border:#334155;
+    --text:#f1f5f9; --muted:#94a3b8;
     --input-bg:#0f172a; --hint-bg:#1c2a1a;
-    --shadow:0 2px 14px rgba(0,0,0,.35);
+    --g-soft:rgba(22,163,74,.15); --b-soft:rgba(29,111,223,.15);
+    --shadow:0 10px 30px -5px rgba(0,0,0,.45);
     color-scheme: dark;
   }
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:24px 16px}
-.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-.hero{background:linear-gradient(125deg,var(--g),var(--b));color:#fff;border-radius:16px;padding:22px 24px;box-shadow:0 10px 30px rgba(10,40,80,.18)}
-.hero .eyebrow{font-size:11px;letter-spacing:.09em;text-transform:uppercase;opacity:.85;font-weight:700}
-.hero h1{font-size:24px;font-weight:800;margin:4px 0 4px}
-.hero .sub{font-size:13px;opacity:.92}
-.card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
-.step-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--b)}
-.step-num{width:22px;height:22px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
-label{font-size:13px;font-weight:600;color:var(--muted)}
-.field{display:flex;flex-direction:column;gap:5px;min-width:0}
-.row{display:flex;gap:12px;flex-wrap:wrap}
-.row .field{flex:1 1 200px}
-select,input[type=search],input[type=text],input[type=email],input[type=tel],input[type=number]{
-  font:inherit;font-size:15px;padding:10px 11px;border-radius:8px;
-  border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);width:100%;
+body{
+  font-family:"Plus Jakarta Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  background:radial-gradient(circle at 10% 0%, rgba(11,107,58,.08), transparent 40%),
+             radial-gradient(circle at 90% 10%, rgba(10,78,161,.08), transparent 40%),
+             var(--bg);
+  color:var(--text);padding:32px 16px 60px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
 }
-select:focus,input:focus{outline:2px solid var(--b);outline-offset:1px;border-color:var(--b)}
-input.invalid{border-color:var(--red)}
-.mat-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
-.mat-tools button{font:inherit;font-size:12px;font-weight:700;padding:6px 10px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--b);cursor:pointer}
-.mat-tools .count{font-size:12px;color:var(--muted);margin-left:auto}
-.mat-group h3{font-size:13px;color:var(--g);font-weight:800;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
-.mat-row{display:flex;align-items:flex-start;gap:10px;padding:9px 10px;border:1.5px solid var(--border);border-radius:8px;margin-bottom:7px;background:var(--input-bg);cursor:pointer}
-.mat-row input[type=checkbox]{width:17px;height:17px;flex-shrink:0;margin-top:2px;accent-color:var(--g)}
-.mat-row .mname{flex:1;min-width:0;font-size:14px;color:var(--text);font-weight:500}
-.mat-row .mh{font-family:"Consolas","Courier New",monospace;font-size:12px;color:var(--muted);white-space:nowrap}
-.empty-note{font-size:13px;color:var(--muted);font-style:italic}
-.manual-fields{display:flex;flex-direction:column;gap:12px;margin-top:12px;padding:12px;border:1.5px dashed var(--border);border-radius:10px}
-.mrow{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding:9px 10px;border:1.5px solid var(--border);border-radius:8px;margin-bottom:7px;background:var(--input-bg)}
-.mrow .field{flex:2 1 200px}
-.mrow .field.narrow{flex:1 1 90px}
-.mrow button.remove{font:inherit;font-size:12px;font-weight:700;padding:9px 10px;border-radius:8px;border:1.5px solid #fca5a5;background:transparent;color:var(--red);cursor:pointer}
-button.add-row{font:inherit;font-size:13px;font-weight:700;padding:9px 12px;border-radius:8px;border:1.5px dashed var(--b);background:transparent;color:var(--b);cursor:pointer;align-self:flex-start}
-.recap{background:var(--hint-bg);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
-.recap-line{display:flex;justify-content:space-between;font-size:14px;gap:10px}
-.recap-line .v,.recap-total .tv{white-space:nowrap;font-family:"Consolas","Courier New",monospace;font-variant-numeric:tabular-nums}
-.recap-total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed var(--border);padding-top:9px;margin-top:2px}
-.recap-total .tl{font-size:13px;color:var(--muted)}
-.recap-total .tv{font-size:22px;font-weight:800;color:var(--g)}
-button.primary{font:inherit;font-size:15px;font-weight:700;padding:13px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--g),var(--b));color:#fff;cursor:pointer;width:100%}
-button.primary:disabled{opacity:.45;cursor:not-allowed}
-button.primary:not(:disabled):hover{filter:brightness(1.08)}
-button.ghost{font:inherit;font-size:14px;font-weight:700;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--text);cursor:pointer}
-.hint{font-size:12px;color:var(--muted);line-height:1.5}
+.wrap{max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(130deg,#074f2a 0%,var(--g) 45%,var(--b) 100%);
+  color:#fff;border-radius:20px;padding:28px 30px;
+  box-shadow:0 16px 40px -8px rgba(10,55,110,.28);
+}
+.hero::after{
+  content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%);
+  pointer-events:none;
+}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.hero .eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(255,255,255,.16);backdrop-filter:blur(6px);
+  padding:5px 12px;border-radius:999px;font-weight:700;
+}
+.hero .badge-live{
+  display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;
+  background:rgba(0,0,0,.22);padding:4px 11px;border-radius:999px;
+}
+.hero .dot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 3px rgba(74,222,128,.25)}
+.hero h1{font-size:clamp(22px,3.5vw,28px);font-weight:800;margin:12px 0 6px;letter-spacing:-.02em}
+.hero .sub{font-size:14px;opacity:.92;max-width:640px}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:24px;display:flex;flex-direction:column;gap:18px;box-shadow:var(--shadow);
+  transition:border-color .2s,box-shadow .2s;
+}
+.step-label{
+  display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--b);
+  padding-bottom:10px;border-bottom:1px solid var(--border);
+}
+.step-num{
+  width:26px;height:26px;border-radius:8px;
+  background:linear-gradient(135deg,var(--g),var(--b));color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800;flex-shrink:0;
+  box-shadow:0 3px 8px rgba(10,78,161,.25);
+}
+label{font-size:13px;font-weight:600;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.row .field{flex:1 1 220px}
+select,input[type=search],input[type=text],input[type=email],input[type=tel],input[type=number]{
+  font:inherit;font-size:14.5px;padding:11px 13px;border-radius:10px;
+  border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);width:100%;
+  transition:border-color .15s,box-shadow .15s,background-color .15s;
+}
+select:hover,input:hover{border-color:#cbd5e1}
+select:focus,input:focus{
+  outline:none;border-color:var(--b2);background:var(--card);
+  box-shadow:0 0 0 4px rgba(29,111,223,.14);
+}
+input.invalid{border-color:var(--red);box-shadow:0 0 0 3px rgba(220,38,38,.12)}
+.mat-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.mat-tools button{
+  font:inherit;font-size:12px;font-weight:700;padding:7px 12px;border-radius:8px;
+  border:1.5px solid var(--border);background:var(--input-bg);color:var(--b);cursor:pointer;
+  transition:all .15s;
+}
+.mat-tools button:hover{background:var(--b-soft);border-color:var(--b2)}
+.mat-tools .count{font-size:12.5px;font-weight:600;color:var(--muted);margin-left:auto}
+.mat-group h3{
+  font-size:12.5px;color:var(--g);font-weight:800;margin:12px 0 8px;
+  text-transform:uppercase;letter-spacing:.05em;
+}
+.mat-row{
+  display:flex;align-items:flex-start;gap:12px;padding:12px 14px;
+  border:1.5px solid var(--border);border-radius:11px;margin-bottom:8px;
+  background:var(--input-bg);cursor:pointer;transition:all .15s;
+}
+.mat-row:hover{border-color:var(--g2);background:var(--g-soft)}
+.mat-row input[type=checkbox]{width:18px;height:18px;flex-shrink:0;margin-top:2px;accent-color:var(--g)}
+.mat-row .mname{flex:1;min-width:0;font-size:14px;color:var(--text);font-weight:600}
+.mat-row .mh{
+  font-family:"JetBrains Mono","Consolas",monospace;font-size:12px;font-weight:700;
+  color:var(--g);background:var(--g-soft);padding:2px 8px;border-radius:6px;white-space:nowrap;
+}
+.empty-note{font-size:13.5px;color:var(--muted);font-style:italic;padding:8px 0}
+.manual-fields{
+  display:flex;flex-direction:column;gap:14px;margin-top:12px;padding:16px;
+  border:1.5px dashed var(--border);border-radius:12px;background:rgba(148,163,184,.04);
+}
+.mrow{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;padding:12px 14px;
+  border:1.5px solid var(--border);border-radius:12px;margin-bottom:10px;
+  background:var(--input-bg);transition:border-color .15s;
+}
+.mrow:hover{border-color:#cbd5e1}
+.mrow .field{flex:2 1 220px}
+.mrow .field.narrow{flex:1 1 95px}
+.mrow button.remove{
+  font:inherit;font-size:12.5px;font-weight:700;padding:11px 13px;border-radius:10px;
+  border:1.5px solid #fecaca;background:#fef2f2;color:var(--red);cursor:pointer;transition:all .15s;
+}
+.mrow button.remove:hover{background:#fee2e2;border-color:#f87171}
+button.add-row{
+  font:inherit;font-size:13.5px;font-weight:700;padding:10px 16px;border-radius:10px;
+  border:1.5px dashed var(--b2);background:var(--b-soft);color:var(--b);cursor:pointer;
+  align-self:flex-start;transition:all .15s;
+}
+button.add-row:hover{background:#dbeafe;transform:translateY(-1px)}
+.recap{
+  background:linear-gradient(135deg,var(--g-soft),var(--b-soft));
+  border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.recap-line{display:flex;justify-content:space-between;font-size:14px;gap:10px;color:var(--muted);font-weight:500}
+.recap-line .v,.recap-total .tv{
+  white-space:nowrap;font-family:"JetBrains Mono","Consolas",monospace;
+  font-variant-numeric:tabular-nums;font-weight:700;color:var(--text);
+}
+.recap-total{
+  display:flex;justify-content:space-between;align-items:baseline;
+  border-top:1.5px dashed var(--border);padding-top:12px;margin-top:4px;
+}
+.recap-total .tl{font-size:14px;font-weight:700;color:var(--text)}
+.recap-total .tv{font-size:24px;font-weight:800;color:var(--g)}
+button.primary{
+  font:inherit;font-size:15px;font-weight:700;padding:14px 20px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,var(--g) 0%,var(--b) 100%);color:#fff;cursor:pointer;width:100%;
+  box-shadow:0 8px 20px -4px rgba(11,107,58,.35);
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .15s,box-shadow .15s,filter .15s;
+}
+button.primary:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+button.primary:not(:disabled):hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 12px 24px -4px rgba(11,107,58,.45)}
+button.secondary{
+  font:inherit;font-size:14px;font-weight:700;padding:12px 16px;border-radius:11px;
+  border:1.5px solid var(--b2);background:var(--b-soft);color:var(--b);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:all .15s;
+}
+button.secondary:hover{background:#dbeafe;transform:translateY(-1px)}
+button.ghost{
+  font:inherit;font-size:13.5px;font-weight:700;padding:11px 15px;border-radius:11px;
+  border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;
+}
+button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,163,184,.08)}
+.hint{font-size:12.5px;color:var(--muted);line-height:1.55}
 .err{font-size:12px;color:var(--red);font-weight:600}
-.status{font-size:13px;font-weight:600;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border)}
-.status.ok{color:var(--g);border-color:var(--g)}
-.status.wait{color:var(--amber);border-color:var(--amber)}
+.status{font-size:13.5px;font-weight:600;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border)}
+.status.ok{color:var(--g);background:var(--g-soft);border-color:#86efac}
+.status.wait{color:var(--amber);background:#fffbeb;border-color:#fde68a}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-/* Document généré (aperçu) */
-.doc{background:#fff;color:#1a2536;border:1.5px solid var(--border);border-radius:var(--r);padding:22px}
-.doc-head{text-align:center;border-bottom:3px solid var(--g);padding-bottom:12px;margin-bottom:16px}
-.doc-head .inst{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#5a6a80;font-weight:700}
-.doc-head h2{font-size:20px;margin-top:4px;color:var(--b)}
-.doc-ref{font-family:"Consolas","Courier New",monospace;font-size:12px;color:#5a6a80;text-align:center;margin-bottom:14px}
-.doc p{font-size:14.5px;line-height:1.55;margin:0 0 10px}
-.doc table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
-.doc th,.doc td{border:1px solid #dde4ee;padding:7px 9px;text-align:left}
-.doc th{background:#eef2f7;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#5a6a80}
-.doc .num{text-align:right;font-family:"Consolas","Courier New",monospace;font-variant-numeric:tabular-nums}
-.doc tfoot td{font-weight:800;background:#f0fdf4}
-.doc .exo{background:#fffbeb;border:1px solid #dde4ee;border-radius:8px;padding:10px 12px;font-size:13.5px}
-.doc .contact{font-size:13px;color:#5a6a80}
-.sig{display:flex;justify-content:space-between;margin-top:26px;gap:20px}
-.sig div{flex:1;font-size:12px;color:#5a6a80}
-.sig .line{border-top:1px solid #8a97a8;margin-top:34px;padding-top:4px}
-.actions{display:flex;gap:10px;flex-wrap:wrap}
-.actions button{flex:1 1 180px}
-.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--g);color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:50}
+/* Document généré (aperçu & PDF A4) */
+.doc{
+  background:#fff;color:#1a2536;border:1.5px solid #cbd5e1;border-radius:14px;
+  padding:28px 30px;box-shadow:0 4px 16px rgba(15,23,42,.05);
+}
+.doc-head{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  border-bottom:3px solid #0b6b3a;padding-bottom:14px;margin-bottom:16px;
+}
+.doc-head-main{flex:1}
+.doc-head .inst{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#475569;font-weight:800}
+.doc-head h2{font-size:20px;margin-top:4px;color:#0a4ea1;font-weight:800}
+.doc-head .doc-ref{
+  font-family:"JetBrains Mono","Consolas",monospace;font-size:12px;color:#0b6b3a;
+  background:#ecfdf5;border:1px solid #a7f3d0;padding:4px 10px;border-radius:6px;
+  display:inline-block;margin-top:6px;font-weight:700;
+}
+.doc-qr{
+  display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;
+  background:#f8fafc;border:1px solid #e2e8f0;padding:6px;border-radius:8px;
+}
+.doc-qr img{width:68px;height:68px;display:block}
+.doc-qr span{font-family:"JetBrains Mono",monospace;font-size:9px;color:#64748b;text-transform:uppercase}
+.doc p{font-size:14px;line-height:1.6;margin:0 0 10px}
+.doc table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+.doc th,.doc td{border:1px solid #cbd5e1;padding:8px 10px;text-align:left}
+.doc th{background:#f1f5f9;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#334155;font-weight:800}
+.doc .num{text-align:right;font-family:"JetBrains Mono","Consolas",monospace;font-variant-numeric:tabular-nums}
+.doc tfoot td{font-weight:800;background:#ecfdf5;color:#065f46}
+.doc .exo{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 12px;font-size:13px}
+.doc .contact{font-size:12.5px;color:#475569;margin-top:6px}
+.sig{display:flex;justify-content:space-between;margin-top:24px;gap:24px}
+.sig div{flex:1;font-size:12px;color:#475569;font-weight:600}
+.sig .line{border-top:1.5px solid #94a3b8;margin-top:38px;padding-top:6px}
+.pdf-banner{
+  background:linear-gradient(135deg,var(--g-soft),var(--b-soft));
+  border:1.5px solid #86efac;border-radius:12px;padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+}
+.pdf-banner-text strong{display:block;font-size:14.5px;color:var(--text)}
+.pdf-banner-text span{font-size:12.5px;color:var(--muted)}
+.actions-main{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.actions-sub{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center;padding-top:6px}
+.toast{
+  position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+  background:#0f172a;color:#fff;padding:11px 18px;border-radius:999px;
+  font-size:13.5px;font-weight:600;box-shadow:0 10px 25px rgba(0,0,0,.25);
+  opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;
+}
 .toast.show{opacity:1}
 [hidden]{display:none!important}
 @media print{
-  .hero,.actions,.hint,.status,#form,#program-card,.step-label{display:none!important}
+  .hero,.actions-main,.actions-sub,.pdf-banner,.hint,.status,#form,#program-card,.step-label{display:none!important}
   body{background:#fff;padding:0}
   .card,.doc{border:none;box-shadow:none;padding:0}
 }
@@ -107,7 +248,10 @@ button.ghost{font:inherit;font-size:14px;font-weight:700;padding:12px 14px;borde
 <body>
 <div class="wrap">
   <header class="hero">
-    <div class="eyebrow">CESAG — DPGELM</div>
+    <div class="hero-top">
+      <div class="eyebrow">CESAG — DPGELM</div>
+      <div class="badge-live"><span class="dot"></span>Enregistrement en ligne actif</div>
+    </div>
     <h1>Demande de reprise de matière(s)</h1>
     <div class="sub" id="bar-sub">Choisissez votre programme et votre niveau pour accéder à votre formulaire de reprise.</div>
   </header>
@@ -196,16 +340,27 @@ button.ghost{font:inherit;font-size:14px;font-weight:700;padding:12px 14px;borde
   </form>
 
   <section id="result" hidden class="card">
-    <div class="step-label"><span class="step-num">✓</span>Demande générée</div>
+    <div class="step-label"><span class="step-num">✓</span>Demande enregistrée &amp; fiche prête</div>
     <div class="status" id="send-status" hidden></div>
-    <div id="doc" class="doc"></div>
-    <div class="actions">
-      <button class="primary" id="download-btn" type="button">Télécharger ma fiche</button>
-      <button class="primary" id="print-btn" type="button">Imprimer</button>
-      <button class="ghost" id="json-btn" type="button" hidden>Télécharger le fichier .json</button>
-      <button class="ghost" id="restart-btn" type="button">Nouvelle demande</button>
+    <div class="pdf-banner">
+      <div class="pdf-banner-text">
+        <strong>📄 Votre fiche officielle est prête à être téléchargée</strong>
+        <span>Cliquez sur « Exporter ma demande en PDF » pour enregistrer directement le fichier PDF sur votre téléphone ou ordinateur.</span>
+      </div>
     </div>
-    <p class="hint">Téléchargez ou imprimez votre fiche, signez-la et remettez-la au secrétariat.</p>
+    <div class="actions-main">
+      <button class="primary" id="pdf-btn" type="button">📥 Exporter ma demande en PDF</button>
+      <button class="secondary" id="print-btn" type="button">🖨️ Imprimer directement</button>
+    </div>
+    <div id="doc" class="doc"></div>
+    <div class="actions-sub">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="ghost" id="download-btn" type="button">Télécharger en page web (.html)</button>
+        <button class="ghost" id="json-btn" type="button" hidden>Télécharger le fichier .json</button>
+      </div>
+      <button class="ghost" id="restart-btn" type="button">↺ Nouvelle demande</button>
+    </div>
+    <p class="hint">Une fois le PDF téléchargé, imprimez-le, signez-le et déposez-le au secrétariat (accompagné de votre justificatif si vous avez demandé une exonération).</p>
   </section>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -871,36 +1026,49 @@ window.PROGRAMS = [
         '<tr><td>Nouveau montant à régler (si exonération accordée)</td><td>……………………… F</td></tr></tbody></table>';
     }
     var ident = s.code ? 'étudiant(e) n° ' + esc(s.code) + ', ' + esc(s.promo) : esc(s.promo);
+    var qrPayload = 'CESAG-REPRISE|' + sub.ref + '|' + s.nom + ' ' + s.prenom + '|' + (s.code || 'NC') + '|TOTAL:' + t.total + 'F';
+    var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=4&data=' + encodeURIComponent(qrPayload);
     var body =
-      '<div class="doc-head"><div class="inst">CESAG — Direction des Programmes Grande École, Licences et Masters</div>' +
-      '<h2>Demande de reprise &amp; facture associée</h2></div>' +
-      '<div class="doc-ref">Référence ' + esc(sub.ref) + ' · ' + esc(sub.dateStr) + '</div>' +
+      '<div class="doc-head">' +
+        '<div class="doc-head-main">' +
+          '<div class="inst">CESAG — Direction des Programmes Grande École, Licences et Masters</div>' +
+          '<h2>Demande de reprise &amp; facture associée</h2>' +
+          '<div class="doc-ref">Réf. ' + esc(sub.ref) + ' · ' + esc(sub.dateStr) + '</div>' +
+        '</div>' +
+        '<div class="doc-qr">' +
+          '<img src="' + esc(qrUrl) + '" alt="QR Code ' + esc(sub.ref) + '" crossorigin="anonymous">' +
+          '<span>Vérification</span>' +
+        '</div>' +
+      '</div>' +
       '<p>Je soussigné(e) <strong>' + esc(s.nom + ' ' + s.prenom) + '</strong>, ' + ident +
       ', sollicite par la présente mon inscription à la session de reprise pour la ou les matière(s) listée(s) ci-dessous, conformément à la décision du jury.</p>' +
       '<table><thead><tr><th>Semestre</th><th>Matière</th><th class="num">Volume</th><th class="num">Montant</th></tr></thead><tbody>' + rows + '</tbody>' +
       '<tfoot><tr><td colspan="3">Frais d\'inscription à la reprise</td><td class="num">' + fmt(t.frais) + '</td></tr>' +
       '<tr><td colspan="3">Total à régler</td><td class="num">' + fmt(t.total) + '</td></tr></tfoot></table>' +
       exoBlock +
-      '<p class="contact">Contact : ' + esc(sub.email) + ' · ' + esc(sub.tel) + '</p>' +
+      '<p class="contact">Contact étudiant : ' + esc(sub.email) + ' · ' + esc(sub.tel) + '</p>' +
       '<div class="sig"><div><div class="line">Signature de l\'étudiant(e)</div></div><div><div class="line">Visa du secrétariat</div></div></div>';
     if (!standalone) return body;
     return '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' + esc(sub.ref) + '</title><style>' +
-      'body{font-family:"Segoe UI",Arial,sans-serif;max-width:700px;margin:40px auto;padding:0 20px;color:#1a2536}' +
-      '.doc-head{text-align:center;border-bottom:3px solid #0b6b3a;padding-bottom:12px;margin-bottom:16px}' +
+      'body{font-family:"Segoe UI",Arial,sans-serif;max-width:720px;margin:32px auto;padding:0 20px;color:#1a2536}' +
+      '.doc-head{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:3px solid #0b6b3a;padding-bottom:14px;margin-bottom:16px}' +
       '.doc-head h2{margin:4px 0 0;color:#0a4ea1;font-size:20px}' +
       '.inst{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#5a6a80;font-weight:700}' +
-      '.doc-ref{font-family:Consolas,monospace;font-size:12px;color:#5a6a80;text-align:center;margin-bottom:14px}' +
-      'p{font-size:14.5px;line-height:1.55;margin:0 0 10px}' +
-      'table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}' +
-      'th,td{border:1px solid #dde4ee;padding:7px 9px;text-align:left}' +
-      'th{background:#eef2f7;font-size:11px;text-transform:uppercase;color:#5a6a80}' +
+      '.doc-ref{font-family:Consolas,monospace;font-size:12px;color:#0b6b3a;background:#ecfdf5;border:1px solid #a7f3d0;padding:4px 10px;border-radius:6px;display:inline-block;margin-top:6px;font-weight:700}' +
+      '.doc-qr{display:flex;flex-direction:column;align-items:center;gap:3px;border:1px solid #e2e8f0;padding:6px;border-radius:8px}' +
+      '.doc-qr img{width:68px;height:68px;display:block}' +
+      '.doc-qr span{font-family:Consolas,monospace;font-size:9px;color:#64748b;text-transform:uppercase}' +
+      'p{font-size:14px;line-height:1.55;margin:0 0 10px}' +
+      'table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}' +
+      'th,td{border:1px solid #cbd5e1;padding:7px 9px;text-align:left}' +
+      'th{background:#f1f5f9;font-size:11px;text-transform:uppercase;color:#334155}' +
       '.num{text-align:right;font-family:Consolas,monospace}' +
-      'tfoot td{font-weight:800;background:#f0fdf4}' +
-      '.exo{background:#fffbeb;border:1px solid #dde4ee;border-radius:8px;padding:10px 12px}' +
-      '.contact{font-size:13px;color:#5a6a80}' +
+      'tfoot td{font-weight:800;background:#ecfdf5;color:#065f46}' +
+      '.exo{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 12px}' +
+      '.contact{font-size:12.5px;color:#475569}' +
       '.sig{display:flex;justify-content:space-between;margin-top:26px;gap:20px}' +
-      '.sig div{flex:1;font-size:12px;color:#5a6a80}' +
-      '.line{border-top:1px solid #8a97a8;margin-top:34px;padding-top:4px}' +
+      '.sig div{flex:1;font-size:12px;color:#475569;font-weight:600}' +
+      '.line{border-top:1.5px solid #94a3b8;margin-top:34px;padding-top:4px}' +
       '</style></head><body>' + body + '</body></html>';
   }
 
@@ -1008,10 +1176,42 @@ window.PROGRAMS = [
     setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
   }
 
+  function exportDirectPDF(){
+    if (!lastSubmission) return;
+    var btn = $('pdf-btn');
+    var docEl = $('doc');
+    if (typeof window.html2pdf === 'function'){
+      var prevText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '⏳ Génération du PDF en cours…';
+      var cleanNom = String(lastSubmission.student.nom || 'CESAG').replace(/[^A-Za-z0-9_-]/g, '_');
+      var fileName = 'Reprise_CESAG_' + cleanNom + '_' + lastSubmission.ref + '.pdf';
+      var opt = {
+        margin:       [12, 12, 12, 12],
+        filename:     fileName,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      window.html2pdf().set(opt).from(docEl).save().then(function(){
+        btn.disabled = false;
+        btn.textContent = prevText;
+        showToast('PDF téléchargé : ' + fileName);
+      }).catch(function(){
+        btn.disabled = false;
+        btn.textContent = prevText;
+        window.print();
+      });
+    } else {
+      window.print();
+    }
+  }
+
+  $('pdf-btn').addEventListener('click', exportDirectPDF);
   $('download-btn').addEventListener('click', function(){
     if (!lastSubmission) return;
     saveFile(buildDocHTML(lastSubmission, true), 'text/html', lastSubmission.ref + '.html');
-    showToast('Document téléchargé');
+    showToast('Document HTML téléchargé');
   });
   $('json-btn').addEventListener('click', function(){
     if (!lastSubmission) return;
