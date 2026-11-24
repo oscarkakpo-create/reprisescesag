@@ -362,6 +362,11 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
     </div>
     <p class="hint">Une fois le PDF téléchargé, imprimez-le, signez-le et déposez-le au secrétariat (accompagné de votre justificatif si vous avez demandé une exonération).</p>
   </section>
+
+  <footer class="card" style="padding:16px 20px;font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:4px">
+    <strong style="color:var(--text);font-size:13.5px">Contacts Secrétariat DPGELM — CESAG</strong>
+    <span>Pour toute question ou transmission de justificatif : <a href="mailto:mame.coulibaly@cesag.edu.sn" style="color:var(--b)">mame.coulibaly@cesag.edu.sn</a> · <a href="mailto:isabelle.Mandiouba@cesag.edu.sn" style="color:var(--b)">isabelle.Mandiouba@cesag.edu.sn</a> · <a href="mailto:jean.agopome@cesag.edu.sn" style="color:var(--b)">jean.agopome@cesag.edu.sn</a></span>
+  </footer>
 </div>
 <div class="toast" id="toast" role="status"></div>
 
@@ -1046,7 +1051,8 @@ window.PROGRAMS = [
       '<tfoot><tr><td colspan="3">Frais d\'inscription à la reprise</td><td class="num">' + fmt(t.frais) + '</td></tr>' +
       '<tr><td colspan="3">Total à régler</td><td class="num">' + fmt(t.total) + '</td></tr></tfoot></table>' +
       exoBlock +
-      '<p class="contact">Contact étudiant : ' + esc(sub.email) + ' · ' + esc(sub.tel) + '</p>' +
+      <p class="contact"><strong>Coordonnées de l\'étudiant(e) :</strong> ' + esc(sub.email) + ' · ' + esc(sub.tel) + '</p>' +
+      '<p class="contact"><strong>Contacts Secrétariat DPGELM :</strong> mame.coulibaly@cesag.edu.sn · isabelle.Mandiouba@cesag.edu.sn · jean.agopome@cesag.edu.sn</p>' +
       '<div class="sig"><div><div class="line">Signature de l\'étudiant(e)</div></div><div><div class="line">Visa du secrétariat</div></div></div>';
     if (!standalone) return body;
     return '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' + esc(sub.ref) + '</title><style>' +
