@@ -192,7 +192,7 @@ button.ghost{font:inherit;font-size:14px;font-weight:700;padding:12px 14px;borde
     </div>
 
     <button type="submit" class="primary" id="submit-btn" disabled>Valider ma demande et générer ma facture</button>
-    <p class="hint">En validant, vous confirmez les matières ci-dessus. Vous devrez ensuite télécharger ou imprimer votre fiche, la signer et la remettre au secrétariat. Rien n'est enregistré sur ce site.</p>
+    <p class="hint">En validant, vous confirmez les matières ci-dessus. Votre demande sera transmise au secrétariat et vous devrez également télécharger ou imprimer votre fiche, la signer et la remettre au secrétariat.</p>
   </form>
 
   <section id="result" hidden class="card">
@@ -205,7 +205,7 @@ button.ghost{font:inherit;font-size:14px;font-weight:700;padding:12px 14px;borde
       <button class="ghost" id="json-btn" type="button" hidden>Télécharger le fichier .json</button>
       <button class="ghost" id="restart-btn" type="button">Nouvelle demande</button>
     </div>
-    <p class="hint">Téléchargez ou imprimez votre fiche, signez-la et remettez-la au secrétariat. Aucune donnée n'est conservée sur ce site : si vous fermez la page, refaites la demande.</p>
+    <p class="hint">Téléchargez ou imprimez votre fiche, signez-la et remettez-la au secrétariat.</p>
   </section>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -217,7 +217,7 @@ button.ghost{font:inherit;font-size:14px;font-weight:700;padding:12px 14px;borde
 // et peut aussi télécharger un fichier .json à transmettre au secrétariat.
 "use strict";
 window.REPRISE_CONFIG = {
-  ENDPOINT_URL: "",
+  ENDPOINT_URL: "https://script.google.com/macros/s/AKfycbzOUJglQOsxRlDs0ysZJWuQQXrumfTiGU1znHO2eWUsdUv3PGa8n6V5BotBquBo1OBoYQ/exec",
   TARIF_HEURE: 2500,
   FRAIS_INSCRIPTION: 25000
 };
