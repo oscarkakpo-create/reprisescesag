@@ -1601,7 +1601,6 @@ window.PROGRAMS = [
             '</div>' +
           '</div>' +
           '<div class="letter-right">' +
-            '<img class="doc-logo" src="' + logoSrc + '" alt="Logo CESAG">' +
             '<div class="letter-date">Dakar, le ' + esc(sub.dateStr) + '</div>' +
             '<div class="letter-recipient">' +
               '<strong>À l\'attention de Madame le Directeur Général du CESAG</strong><br>' +
@@ -1625,9 +1624,12 @@ window.PROGRAMS = [
           '</p>' +
 
           '<p>' +
-            'Conformément aux délibérations du jury d\'examen et aux dispositions pédagogiques en vigueur au CESAG, je sollicite la réinscription pour les matière(s) détaillée(s) dans la fiche d\'inscription jointe à la présente.' +
-            (sub.exo ? ' Je sollicite également une exonération (totale ou partielle) des frais, sur justificatif joint.' : '') +
+            'Conformément aux délibérations du jury d\'examen et aux dispositions pédagogiques en vigueur au CESAG, je sollicite la réinscription pour la ou les matière(s) suivante(s) :' +
           '</p>' +
+          '<ul class="letter-subjects">' + sub.picked.map(function(m){
+            return '<li>' + esc(m.nom) + ' <span style="color:#64748b">(' + esc(m.custom ? m.sem : 'Semestre ' + m.sem) + ')</span></li>';
+          }).join('') + '</ul>' +
+          (sub.exo ? '<p>Je sollicite également une exonération (totale ou partielle) des frais, sur justificatif joint.</p>' : '') +
 
           '<p>' +
             'Je m\'engage formellement à assister assidûment à l\'ensemble des séances programmées et à me conformer rigoureusement au règlement intérieur ainsi qu\'aux obligations académiques et déontologiques de l\'institution.' +
@@ -1645,21 +1647,6 @@ window.PROGRAMS = [
             '<div class="sig-mention">Signature précédée de la mention « Lu et approuvé » :</div>' +
             sigLetterSpace +
           '</div>' +
-          '<div class="sig-col sig-col-dg">' +
-            '<div class="sig-title">Avis &amp; Décision de Madame le Directeur Général</div>' +
-            '<div class="dg-options">' +
-              '<span>☐ Accordée</span>' +
-              '<span>☐ Refusée</span>' +
-              '<span>☐ Accordée avec exonération</span>' +
-            '</div>' +
-            '<div class="sig-mention">Fait à Dakar, le …………………………………</div>' +
-            '<div class="sig-space"></div>' +
-          '</div>' +
-        '</div>' +
-
-        '<div class="letter-footer-note">' +
-          '<span>Document officiel généré pour transmission au Service Courrier du CESAG · Réf. ' + esc(sub.ref) + '</span>' +
-          '<span>Secrétariat DPGELM : mame.coulibaly@cesag.edu.sn · isabelle.Mandiouba@cesag.edu.sn</span>' +
         '</div>' +
       '</div>';
 
