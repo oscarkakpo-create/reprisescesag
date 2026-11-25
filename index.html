@@ -299,7 +299,19 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
         </div>
         <div class="row">
           <div class="field"><label for="m-code">N° étudiant (si connu)</label><input id="m-code" type="text" placeholder="laisser vide si inconnu"></div>
-          <div class="field"><label for="m-promo">Classe et promotion</label><input id="m-promo" type="text" placeholder="ex. LPSG2 EGP, promotion 2023-2024"></div>
+          <div class="field">
+            <label for="m-promo-select">Promotion</label>
+            <select id="m-promo-select">
+              <option value="" disabled>Choisir votre promotion…</option>
+              <option value="2023-2024">Promotion 2023-2024</option>
+              <option value="2024-2025">Promotion 2024-2025</option>
+              <option value="2025-2026">Promotion 2025-2026</option>
+              <option value="2026-2027" selected>Promotion 2026-2027</option>
+              <option value="autre">Autre (saisir ma promotion)…</option>
+            </select>
+            <input id="m-promo-custom" type="text" placeholder="Ex. Promotion 2022-2023" hidden style="margin-top:6px">
+            <input id="m-promo" type="hidden" value="">
+          </div>
         </div>
       </div>
       <div class="row" style="margin-top:12px">
@@ -331,7 +343,7 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
       </div>
       <label class="mat-row" for="exo-check" style="margin-top:10px">
         <input type="checkbox" id="exo-check">
-        <span class="mname">Je sollicite une exonération (totale ou partielle) de ces frais — maladie ou inscription tardive, sur justificatif</span>
+        <span class="mname">Je bénéficie d'une exonération (totale ou partielle) de ces frais — maladie ou inscription tardive, sur justificatif</span>
       </label>
       <div id="exo-fields" class="manual-fields" hidden>
         <div class="row">
@@ -409,158 +421,11 @@ window.REPRISE_CONFIG = {
 "use strict";
 window.PROGRAMS = [
   {
-    id: "lpsg-egp3",
-    programme: "Licence en Gestion (LPSG)",
-    niveau: "LPSG3 — Entrepreneuriat et Gestion des Projets (EGP)",
-    anneeAcademique: "2026-2027",
-    promoLabel: "classe LPSG3 EGP, promotion 2026-2027",
-    manualOnly: true,
-    students: [],
-    catalog: [
-      {sem:5, nom:"Anglais Général des affaires - TOEFL/TOEIC", h:30},
-      {sem:5, nom:"Crowdfunding", h:15},
-      {sem:5, nom:"Excel appliqué à la gestion des projets", h:15},
-      {sem:5, nom:"Financement bancaire", h:10},
-      {sem:5, nom:"Gestion de l'échéancier", h:15},
-      {sem:5, nom:"Gestion de l'intégration du projet", h:15},
-      {sem:5, nom:"Gestion des ressources matérielles et de l'approvisionnement", h:15},
-      {sem:5, nom:"Gestion du périmètre de projet", h:15},
-      {sem:5, nom:"Passation de marché", h:15},
-      {sem:5, nom:"Planification opérationnelle avec MS Project", h:15},
-      {sem:6, nom:"Anglais de spécialité", h:30},
-      {sem:6, nom:"Conférence actualité", h:5},
-      {sem:6, nom:"Contrôle de projet", h:15},
-      {sem:6, nom:"Gestion des projets internationaux", h:20},
-      {sem:6, nom:"Jeu d'entreprise", h:20},
-      {sem:6, nom:"Langue vivante 2", h:20},
-      {sem:6, nom:"Stage / Projet tutoré / Incubation", h:0},
-      {sem:6, nom:"Suivi et évaluation des projets", h:30}
-    ]
-  },
-  {
-    id: "cca",
-    programme: "Licence en Gestion (LPSG)",
-    niveau: "LPSG3 — Comptabilité, Contrôle, Audit (CCA) — classes A, B et C",
-    anneeAcademique: "2026-2027",
-    promoLabel: "classe LPSG3 CCA (A/B/C), promotion 2026-2027",
-    manualOnly: true,
-    students: [],
-    catalog: [
-      {sem:5, nom:"Analyse et choix des modes d'investissement et de financement", h:30},
-      {sem:5, nom:"Analyse financière", h:20},
-      {sem:5, nom:"Anglais général des affaires", h:30},
-      {sem:5, nom:"Comptabilité financière : comptabilité approfondie 1", h:30},
-      {sem:5, nom:"Comptabilité financière : travaux de fin d'exercice", h:30},
-      {sem:5, nom:"Droit OHADA", h:20},
-      {sem:5, nom:"Fiscalité des entreprises", h:20},
-      {sem:5, nom:"Fiscalité des personnes physiques", h:10},
-      {sem:5, nom:"Introduction à l'audit et au contrôle", h:30},
-      {sem:5, nom:"Introduction au contrôle de gestion", h:20},
-      {sem:5, nom:"Projet tutoré", h:10},
-      {sem:5, nom:"Rapport de stage (Méthodologie de Rédaction)", h:15},
-      {sem:5, nom:"Rapports collectifs de travail", h:10},
-      {sem:5, nom:"Rapports individuels de travail", h:10},
-      {sem:5, nom:"Stratégie d'entreprise", h:20},
-      {sem:5, nom:"Technique de communication en entreprise", h:20},
-      {sem:6, nom:"Anglais professionnel", h:30},
-      {sem:6, nom:"Certification sur les normes comptables-IFRS", h:10},
-      {sem:6, nom:"Comptabilité analytique", h:20},
-      {sem:6, nom:"Comptabilité des sociétés et des groupes", h:30},
-      {sem:6, nom:"Contrôle de gestion", h:30},
-      {sem:6, nom:"Démarche d'audit externe", h:20},
-      {sem:6, nom:"Démarche d'audit interne", h:20},
-      {sem:6, nom:"Elaboration / gestion budgétaire", h:20},
-      {sem:6, nom:"Gestion de la trésorerie", h:20},
-      {sem:6, nom:"Jeu d'entreprise", h:30},
-      {sem:6, nom:"Langue vivante 2", h:20},
-      {sem:6, nom:"Logiciels comptables", h:30},
-      {sem:6, nom:"Marché financier : Introduction aux outils d'analyse", h:20},
-      {sem:6, nom:"Normes comptables internationales (IFRS)", h:20},
-      {sem:6, nom:"Soutenance / Rapport de stage", h:0}
-    ]
-  },
-  {
-    id: "ltcf",
-    programme: "Licence en Gestion (LPSG)",
-    niveau: "LPSG3 — Techniques Comptables et Financières (LTCF)",
-    anneeAcademique: "2026-2027",
-    promoLabel: "classe LPSG3 LTCF, promotion 2026-2027",
-    manualOnly: true,
-    students: [],
-    catalog: [
-      {sem:5, nom:"Analyse et choix des investissements", h:20},
-      {sem:5, nom:"Analyse et choix des modes d'investissement et de financement", h:20},
-      {sem:5, nom:"Analyse financière", h:20},
-      {sem:5, nom:"Comptabilité financière : comptabilité approfondie 1", h:30},
-      {sem:5, nom:"Comptabilité financière : travaux de fin d'exercice", h:30},
-      {sem:5, nom:"Comptabilité financière 1 (Opérations courantes)", h:30},
-      {sem:5, nom:"Droit OHADA", h:30},
-      {sem:5, nom:"Évaluation d'entreprise", h:20},
-      {sem:5, nom:"Fiscalité des entreprises", h:30},
-      {sem:5, nom:"Fiscalité des personnes physiques", h:30},
-      {sem:5, nom:"Organisation comptable et États financiers de synthèse", h:20},
-      {sem:6, nom:"Anglais professionnel", h:40},
-      {sem:6, nom:"Comptabilité de gestion", h:30},
-      {sem:6, nom:"Comptabilité des sociétés et des groupes", h:20},
-      {sem:6, nom:"Contrôle de gestion", h:30},
-      {sem:6, nom:"Elaboration / gestion budgétaire", h:20},
-      {sem:6, nom:"Logiciels comptables", h:30},
-      {sem:6, nom:"Méthodologie de l'audit", h:20},
-      {sem:6, nom:"Normes comptables internationales (IFRS)", h:30},
-      {sem:6, nom:"Soutenance / Rapport de stage", h:0}
-    ]
-  },
-  {
-    id: "tbf",
-    programme: "Licence en Gestion (LPSG)",
-    niveau: "LPSG3 — Techniques Bancaires et Financières (TBF)",
-    anneeAcademique: "2026-2027",
-    promoLabel: "classe LPSG3 TBF, promotion 2026-2027",
-    manualOnly: true,
-    students: [],
-    catalog: [
-      {sem:5, nom:"Business English", h:30},
-      {sem:5, nom:"Business intelligence", h:15},
-      {sem:5, nom:"Data sciences", h:15},
-      {sem:5, nom:"Développement personnel", h:30},
-      {sem:5, nom:"Economie bancaire : structuration et pratiques", h:15},
-      {sem:5, nom:"Excel-VBA pour la finance", h:15},
-      {sem:5, nom:"Gestion et développement de la relation commerciale", h:15},
-      {sem:5, nom:"Marchés des assurances : structuration et pratiques", h:15},
-      {sem:5, nom:"Marchés financiers et bancaires : structuration et pratiques", h:15},
-      {sem:5, nom:"Mathématiques financières appliquées", h:20},
-      {sem:5, nom:"PYTHON 1 : Principes et programmation", h:15},
-      {sem:5, nom:"PYTHON 2", h:15},
-      {sem:5, nom:"Probabilités et statistiques", h:30},
-      {sem:5, nom:"Proposition de valeurs Retails & Corporate", h:15},
-      {sem:5, nom:"SQL", h:15},
-      {sem:5, nom:"Techniques d'expression", h:20},
-      {sem:5, nom:"Trade finance", h:15},
-      {sem:6, nom:"Architecture du web et développement côté client", h:15},
-      {sem:6, nom:"Conception du dispositif de contrôle de gestion bancaire", h:20},
-      {sem:6, nom:"Conformité et réglementation", h:20},
-      {sem:6, nom:"Développement d'applications avec les bases de données", h:15},
-      {sem:6, nom:"Garanties : Concept et familles", h:15},
-      {sem:6, nom:"Garanties et réglementation prudentielle", h:15},
-      {sem:6, nom:"Gestion des risques bancaires et financiers", h:20},
-      {sem:6, nom:"Gouvernance & Leadership", h:20},
-      {sem:6, nom:"Introduction à la Blockchain", h:15},
-      {sem:6, nom:"Mise en œuvre du dispositif de contrôle de gestion bancaire", h:15},
-      {sem:6, nom:"Méthodes d'évaluation d'entreprise", h:20},
-      {sem:6, nom:"Méthodologie de rédaction du rapport", h:20},
-      {sem:6, nom:"Projet tutoré", h:20},
-      {sem:6, nom:"Techniques de financement de l'exploitation", h:20},
-      {sem:6, nom:"Techniques de financement des investissements", h:20},
-      {sem:6, nom:"e-banking", h:15},
-      {sem:6, nom:"e-finance", h:15}
-    ]
-  },
-  {
     id: "lg1",
-    programme: "Licence en Gestion (LPSG)",
-    niveau: "LPSG1 — LG1",
+    programme: "CESAG PRO",
+    niveau: "LG 1 — Licence en Gestion",
     anneeAcademique: "2026-2027",
-    promoLabel: "classe LG1, promotion 2026-2027",
+    promoLabel: "classe LG 1",
     manualOnly: true,
     students: [],
     catalog: [
@@ -597,55 +462,11 @@ window.PROGRAMS = [
     ]
   },
   {
-    id: "lcca1",
-    programme: "Licence en Gestion (LPSG)",
-    niveau: "LPSG1 — LCCA1",
-    anneeAcademique: "2026-2027",
-    promoLabel: "classe LPSG1 CCA, promotion 2026-2027",
-    manualOnly: true,
-    students: [],
-    catalog: [
-      {sem:1, nom:"Anglais général des affaires", h:20},
-      {sem:1, nom:"Comptabilité générale 1: Analyse comptable des opérations courantes", h:30},
-      {sem:1, nom:"Droit et principes comptables", h:20},
-      {sem:1, nom:"Environnement numérique", h:10},
-      {sem:1, nom:"Initiation à l'Audit et au contrôle", h:15},
-      {sem:1, nom:"Introduction au contrôle", h:15},
-      {sem:1, nom:"Introduction au droit", h:20},
-      {sem:1, nom:"Introduction au droit communautaire", h:15},
-      {sem:1, nom:"Introduction au management", h:20},
-      {sem:1, nom:"Introduction à l'Audit", h:15},
-      {sem:1, nom:"Introduction à l'Économie", h:20},
-      {sem:1, nom:"Introduction à la fiscalité", h:15},
-      {sem:1, nom:"Introduction à la gestion d'entreprise", h:20},
-      {sem:1, nom:"Mathématiques appliquées à la gestion", h:20},
-      {sem:1, nom:"Microéconomie", h:30},
-      {sem:1, nom:"Préparation Certification suite Office (Word,  Excel,  Powerpoint)", h:15},
-      {sem:1, nom:"Psychosociologie et comportement au sein des organisations", h:20},
-      {sem:1, nom:"Statistiques descriptives", h:20},
-      {sem:1, nom:"Techniques d’expression écrite et orale", h:20},
-      {sem:2, nom:"Anglais de spécialité", h:20},
-      {sem:2, nom:"Communication organisationnelle", h:15},
-      {sem:2, nom:"Comptabilité générale 2 : Travaux de fin d'exercice", h:30},
-      {sem:2, nom:"Droit des obligations", h:15},
-      {sem:2, nom:"Droit des sociétés", h:15},
-      {sem:2, nom:"Economie régionale", h:20},
-      {sem:2, nom:"Introduction au leadership", h:15},
-      {sem:2, nom:"Introduction au marketing", h:20},
-      {sem:2, nom:"Introduction aux études de marché", h:20},
-      {sem:2, nom:"LV2", h:15},
-      {sem:2, nom:"Langue vivante 2", h:20},
-      {sem:2, nom:"Macroéconomie", h:30},
-      {sem:2, nom:"Mathématiques financières", h:20},
-      {sem:2, nom:"Méthodologie de rédaction de rapport de stage", h:15}
-    ]
-  },
-  {
     id: "lg2",
-    programme: "Licence en Gestion (LPSG)",
-    niveau: "LPSG2 — LG2",
+    programme: "CESAG PRO",
+    niveau: "LG 2 — Licence en Gestion",
     anneeAcademique: "2026-2027",
-    promoLabel: "classe LG2, promotion 2026-2027",
+    promoLabel: "classe LG 2",
     manualOnly: true,
     students: [],
     catalog: [
@@ -686,11 +507,160 @@ window.PROGRAMS = [
     ]
   },
   {
-    id: "lcca2",
-    programme: "Licence en Gestion (LPSG)",
-    niveau: "LPSG2 — LCCA2",
+    id: "lpsg-egp3",
+    programme: "CESAG PRO",
+    niveau: "LG 3 — Entrepreneuriat et Gestion des Projets (EGP)",
     anneeAcademique: "2026-2027",
-    promoLabel: "classe LPSG2 CCA, promotion 2026-2027",
+    promoLabel: "classe LG 3 EGP",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:5, nom:"Anglais Général des affaires - TOEFL/TOEIC", h:30},
+      {sem:5, nom:"Crowdfunding", h:15},
+      {sem:5, nom:"Excel appliqué à la gestion des projets", h:15},
+      {sem:5, nom:"Financement bancaire", h:10},
+      {sem:5, nom:"Gestion de l'échéancier", h:15},
+      {sem:5, nom:"Gestion de l'intégration du projet", h:15},
+      {sem:5, nom:"Gestion des ressources matérielles et de l'approvisionnement", h:15},
+      {sem:5, nom:"Gestion du périmètre de projet", h:15},
+      {sem:5, nom:"Passation de marché", h:15},
+      {sem:5, nom:"Planification opérationnelle avec MS Project", h:15},
+      {sem:6, nom:"Anglais de spécialité", h:30},
+      {sem:6, nom:"Conférence actualité", h:5},
+      {sem:6, nom:"Contrôle de projet", h:15},
+      {sem:6, nom:"Gestion des projets internationaux", h:20},
+      {sem:6, nom:"Jeu d'entreprise", h:20},
+      {sem:6, nom:"Langue vivante 2", h:20},
+      {sem:6, nom:"Stage / Projet tutoré / Incubation", h:0},
+      {sem:6, nom:"Suivi et évaluation des projets", h:30}
+    ]
+  },
+  {
+    id: "ltcf",
+    programme: "CESAG PRO",
+    niveau: "LG 3 — Techniques Comptables et Financières (LTCF)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LG 3 LTCF",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:5, nom:"Analyse et choix des investissements", h:20},
+      {sem:5, nom:"Analyse et choix des modes d'investissement et de financement", h:20},
+      {sem:5, nom:"Analyse financière", h:20},
+      {sem:5, nom:"Comptabilité financière : comptabilité approfondie 1", h:30},
+      {sem:5, nom:"Comptabilité financière : travaux de fin d'exercice", h:30},
+      {sem:5, nom:"Comptabilité financière 1 (Opérations courantes)", h:30},
+      {sem:5, nom:"Droit OHADA", h:30},
+      {sem:5, nom:"Évaluation d'entreprise", h:20},
+      {sem:5, nom:"Fiscalité des entreprises", h:30},
+      {sem:5, nom:"Fiscalité des personnes physiques", h:30},
+      {sem:5, nom:"Organisation comptable et États financiers de synthèse", h:20},
+      {sem:6, nom:"Anglais professionnel", h:40},
+      {sem:6, nom:"Comptabilité de gestion", h:30},
+      {sem:6, nom:"Comptabilité des sociétés et des groupes", h:20},
+      {sem:6, nom:"Contrôle de gestion", h:30},
+      {sem:6, nom:"Elaboration / gestion budgétaire", h:20},
+      {sem:6, nom:"Logiciels comptables", h:30},
+      {sem:6, nom:"Méthodologie de l'audit", h:20},
+      {sem:6, nom:"Normes comptables internationales (IFRS)", h:30},
+      {sem:6, nom:"Soutenance / Rapport de stage", h:0}
+    ]
+  },
+  {
+    id: "tbf",
+    programme: "CESAG PRO",
+    niveau: "LG 3 — Techniques Bancaires et Financières (TBF)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LG 3 TBF",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:5, nom:"Business English", h:30},
+      {sem:5, nom:"Business intelligence", h:15},
+      {sem:5, nom:"Data sciences", h:15},
+      {sem:5, nom:"Développement personnel", h:30},
+      {sem:5, nom:"Economie bancaire : structuration et pratiques", h:15},
+      {sem:5, nom:"Excel-VBA pour la finance", h:15},
+      {sem:5, nom:"Gestion et développement de la relation commerciale", h:15},
+      {sem:5, nom:"Marchés des assurances : structuration et pratiques", h:15},
+      {sem:5, nom:"Marchés financiers et bancaires : structuration et pratiques", h:15},
+      {sem:5, nom:"Mathématiques financières appliquées", h:20},
+      {sem:5, nom:"PYTHON 1 : Principes et programmation", h:15},
+      {sem:5, nom:"PYTHON 2", h:15},
+      {sem:5, nom:"Probabilités et statistiques", h:30},
+      {sem:5, nom:"Proposition de valeurs Retails & Corporate", h:15},
+      {sem:5, nom:"SQL", h:15},
+      {sem:5, nom:"Techniques d'expression", h:20},
+      {sem:5, nom:"Trade finance", h:15},
+      {sem:6, nom:"Architecture du web et développement côté client", h:15},
+      {sem:6, nom:"Conception du dispositif de contrôle de gestion bancaire", h:20},
+      {sem:6, nom:"Conformité et réglementation", h:20},
+      {sem:6, nom:"Développement d'applications avec les bases de données", h:15},
+      {sem:6, nom:"Garanties : Concept et familles", h:15},
+      {sem:6, nom:"Garanties et réglementation prudentielle", h:15},
+      {sem:6, nom:"Gestion des risques bancaires et financiers", h:20},
+      {sem:6, nom:"Gouvernance & Leadership", h:20},
+      {sem:6, nom:"Introduction à la Blockchain", h:15},
+      {sem:6, nom:"Mise en œuvre du dispositif de contrôle de gestion bancaire", h:15},
+      {sem:6, nom:"Méthodes d'évaluation d'entreprise", h:20},
+      {sem:6, nom:"Méthodologie de rédaction du rapport", h:20},
+      {sem:6, nom:"Projet tutoré", h:20},
+      {sem:6, nom:"Techniques de financement de l'exploitation", h:20},
+      {sem:6, nom:"Techniques de financement des investissements", h:20},
+      {sem:6, nom:"e-banking", h:15},
+      {sem:6, nom:"e-finance", h:15}
+    ]
+  },
+  {
+    id: "lcca1",
+    programme: "CESAG PRO",
+    niveau: "LCCA 1 — Licence en Comptabilité, Contrôle et Audit",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LCCA 1",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:1, nom:"Anglais général des affaires", h:20},
+      {sem:1, nom:"Comptabilité générale 1: Analyse comptable des opérations courantes", h:30},
+      {sem:1, nom:"Droit et principes comptables", h:20},
+      {sem:1, nom:"Environnement numérique", h:10},
+      {sem:1, nom:"Initiation à l'Audit et au contrôle", h:15},
+      {sem:1, nom:"Introduction au contrôle", h:15},
+      {sem:1, nom:"Introduction au droit", h:20},
+      {sem:1, nom:"Introduction au droit communautaire", h:15},
+      {sem:1, nom:"Introduction au management", h:20},
+      {sem:1, nom:"Introduction à l'Audit", h:15},
+      {sem:1, nom:"Introduction à l'Économie", h:20},
+      {sem:1, nom:"Introduction à la fiscalité", h:15},
+      {sem:1, nom:"Introduction à la gestion d'entreprise", h:20},
+      {sem:1, nom:"Mathématiques appliquées à la gestion", h:20},
+      {sem:1, nom:"Microéconomie", h:30},
+      {sem:1, nom:"Préparation Certification suite Office (Word,  Excel,  Powerpoint)", h:15},
+      {sem:1, nom:"Psychosociologie et comportement au sein des organisations", h:20},
+      {sem:1, nom:"Statistiques descriptives", h:20},
+      {sem:1, nom:"Techniques d’expression écrite et orale", h:20},
+      {sem:2, nom:"Anglais de spécialité", h:20},
+      {sem:2, nom:"Communication organisationnelle", h:15},
+      {sem:2, nom:"Comptabilité générale 2 : Travaux de fin d'exercice", h:30},
+      {sem:2, nom:"Droit des obligations", h:15},
+      {sem:2, nom:"Droit des sociétés", h:15},
+      {sem:2, nom:"Economie régionale", h:20},
+      {sem:2, nom:"Introduction au leadership", h:15},
+      {sem:2, nom:"Introduction au marketing", h:20},
+      {sem:2, nom:"Introduction aux études de marché", h:20},
+      {sem:2, nom:"LV2", h:15},
+      {sem:2, nom:"Langue vivante 2", h:20},
+      {sem:2, nom:"Macroéconomie", h:30},
+      {sem:2, nom:"Mathématiques financières", h:20},
+      {sem:2, nom:"Méthodologie de rédaction de rapport de stage", h:15}
+    ]
+  },
+  {
+    id: "lcca2",
+    programme: "CESAG PRO",
+    niveau: "LCCA 2 — Licence en Comptabilité, Contrôle et Audit",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LCCA 2",
     manualOnly: true,
     students: [],
     catalog: [
@@ -724,6 +694,48 @@ window.PROGRAMS = [
       {sem:4, nom:"Technique de Recherche d'emploi", h:15},
       {sem:4, nom:"États Financiers de Synthèse", h:30}
     ]
+  },
+  {
+    id: "cca",
+    programme: "CESAG PRO",
+    niveau: "LCCA 3 — Comptabilité, Contrôle et Audit",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe LCCA 3",
+    manualOnly: true,
+    students: [],
+    catalog: [
+      {sem:5, nom:"Analyse et choix des modes d'investissement et de financement", h:30},
+      {sem:5, nom:"Analyse financière", h:20},
+      {sem:5, nom:"Anglais général des affaires", h:30},
+      {sem:5, nom:"Comptabilité financière : comptabilité approfondie 1", h:30},
+      {sem:5, nom:"Comptabilité financière : travaux de fin d'exercice", h:30},
+      {sem:5, nom:"Droit OHADA", h:20},
+      {sem:5, nom:"Fiscalité des entreprises", h:20},
+      {sem:5, nom:"Fiscalité des personnes physiques", h:10},
+      {sem:5, nom:"Introduction à l'audit et au contrôle", h:30},
+      {sem:5, nom:"Introduction au contrôle de gestion", h:20},
+      {sem:5, nom:"Projet tutoré", h:10},
+      {sem:5, nom:"Rapport de stage (Méthodologie de Rédaction)", h:15},
+      {sem:5, nom:"Rapports collectifs de travail", h:10},
+      {sem:5, nom:"Rapports individuels de travail", h:10},
+      {sem:5, nom:"Stratégie d'entreprise", h:20},
+      {sem:5, nom:"Technique de communication en entreprise", h:20},
+      {sem:6, nom:"Anglais professionnel", h:30},
+      {sem:6, nom:"Certification sur les normes comptables-IFRS", h:10},
+      {sem:6, nom:"Comptabilité analytique", h:20},
+      {sem:6, nom:"Comptabilité des sociétés et des groupes", h:30},
+      {sem:6, nom:"Contrôle de gestion", h:30},
+      {sem:6, nom:"Démarche d'audit externe", h:20},
+      {sem:6, nom:"Démarche d'audit interne", h:20},
+      {sem:6, nom:"Elaboration / gestion budgétaire", h:20},
+      {sem:6, nom:"Gestion de la trésorerie", h:20},
+      {sem:6, nom:"Jeu d'entreprise", h:30},
+      {sem:6, nom:"Langue vivante 2", h:20},
+      {sem:6, nom:"Logiciels comptables", h:30},
+      {sem:6, nom:"Marché financier : Introduction aux outils d'analyse", h:20},
+      {sem:6, nom:"Normes comptables internationales (IFRS)", h:20},
+      {sem:6, nom:"Soutenance / Rapport de stage", h:0}
+    ]
   }
 ];
 
@@ -738,6 +750,8 @@ window.PROGRAMS = [
   var FRAIS_INSCRIPTION = CFG.FRAIS_INSCRIPTION;
   var CUSTOM_MODULE = '__custom__';
   var QUEUE_KEY = 'cesag-reprise-file-attente';
+  var DRAFT_KEY = 'cesag-reprise-brouillon-v1';
+  var isRestoringDraft = false;
 
   var $ = function(id){ return document.getElementById(id); };
   var fmt = function(n){ return n.toLocaleString('fr-FR') + ' F'; };
@@ -758,6 +772,35 @@ window.PROGRAMS = [
   var progSel = $('prog-select'), niveauSel = $('niveau-select'), formEl = $('form');
   var studentSel = $('student'), matieresEl = $('matieres'), manualFieldsEl = $('manual-fields');
   var submitBtn = $('submit-btn'), exoCheck = $('exo-check'), exoFieldsEl = $('exo-fields'), exoMotif = $('exo-motif');
+  var promoSelectEl = $('m-promo-select'), promoCustomEl = $('m-promo-custom'), promoHiddenEl = $('m-promo');
+
+  function formatPromotionCase(str){
+    var s = String(str || '').trim().replace(/\s+/g, ' ');
+    if (!s) return '';
+    if (/^\d{4}\s*[-/]\s*\d{4}$/.test(s)){
+      return 'Promotion ' + s.replace(/\s*[-/]\s*/, '-');
+    }
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function syncPromoValue(){
+    if (!promoSelectEl || !promoHiddenEl) return;
+    var baseClass = activeProgram ? activeProgram.promoLabel : '';
+    var selVal = promoSelectEl.value;
+    var promoPart = '';
+    if (selVal === 'autre'){
+      if (promoCustomEl) promoCustomEl.hidden = false;
+      promoPart = formatPromotionCase(promoCustomEl ? promoCustomEl.value : '');
+    } else {
+      if (promoCustomEl) promoCustomEl.hidden = true;
+      promoPart = selVal ? ('Promotion ' + selVal) : '';
+    }
+    if (!promoPart){
+      promoHiddenEl.value = '';
+    } else {
+      promoHiddenEl.value = baseClass ? (baseClass + ', ' + promoPart) : promoPart;
+    }
+  }
 
   $('r-tarif-label').textContent = 'Coût pédagogique (' + TARIF_HEURE.toLocaleString('fr-FR') + ' F / heure)';
   $('r-frais').textContent = fmt(FRAIS_INSCRIPTION);
@@ -823,7 +866,7 @@ window.PROGRAMS = [
       current = 'autre';
       manualFieldsEl.hidden = false;
       $('manual-fields-hint').textContent = "Indiquez vos informations ci-dessous, puis choisissez la ou les matière(s) à reprendre dans la section 2 (le volume horaire se remplit automatiquement).";
-      $('m-promo').value = prog.promoLabel;
+      syncPromoValue();
     } else {
       $('student-field').hidden = false;
       current = null;
@@ -1013,7 +1056,83 @@ window.PROGRAMS = [
     return { heures: heures, cout: cout, frais: FRAIS_INSCRIPTION, total: cout + FRAIS_INSCRIPTION };
   }
 
+  function saveDraft(){
+    if (isRestoringDraft) return;
+    try {
+      var draft = {
+        prog: progSel.value,
+        niveau: niveauSel.value,
+        nom: $('m-nom').value,
+        prenom: $('m-prenom').value,
+        code: $('m-code').value,
+        promoSelect: promoSelectEl ? promoSelectEl.value : '2026-2027',
+        promoCustom: promoCustomEl ? promoCustomEl.value : '',
+        email: $('email').value,
+        tel: $('tel').value,
+        manualRows: manualRows,
+        exoChecked: exoCheck.checked,
+        exoMotif: exoMotif.value
+      };
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    } catch (e) { /* stockage indisponible */ }
+  }
+
+  function clearDraft(){
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+  }
+
+  function restoreDraft(){
+    var raw = null;
+    try { raw = localStorage.getItem(DRAFT_KEY); } catch (e) {}
+    if (!raw) return;
+    try {
+      var d = JSON.parse(raw);
+      if (!d || typeof d !== 'object') return;
+      isRestoringDraft = true;
+      if (d.prog && Array.prototype.some.call(progSel.options, function(o){ return o.value === d.prog; })){
+        progSel.value = d.prog;
+        populateNiveaux(d.prog);
+        if (d.niveau){
+          var prog = PROGRAMS.filter(function(p){ return p.id === d.niveau; })[0];
+          if (prog){
+            niveauSel.value = d.niveau;
+            activateProgram(prog);
+          }
+        }
+      }
+      if (typeof d.nom === 'string') $('m-nom').value = d.nom;
+      if (typeof d.prenom === 'string') $('m-prenom').value = d.prenom;
+      if (typeof d.code === 'string') $('m-code').value = d.code;
+      if (promoSelectEl && d.promoSelect){
+        promoSelectEl.value = d.promoSelect;
+      }
+      if (promoCustomEl && typeof d.promoCustom === 'string'){
+        promoCustomEl.value = d.promoCustom;
+      }
+      syncPromoValue();
+      if (typeof d.email === 'string') $('email').value = d.email;
+      if (typeof d.tel === 'string') $('tel').value = d.tel;
+      if (Array.isArray(d.manualRows) && d.manualRows.length > 0 && activeProgram){
+        manualRows = d.manualRows;
+        var maxId = 0;
+        manualRows.forEach(function(r){ if (r.id > maxId) maxId = r.id; });
+        manualRowSeq = maxId;
+        renderManualRows();
+      }
+      if (typeof d.exoChecked === 'boolean'){
+        exoCheck.checked = d.exoChecked;
+        exoFieldsEl.hidden = !d.exoChecked;
+      }
+      if (typeof d.exoMotif === 'string') exoMotif.value = d.exoMotif;
+      isRestoringDraft = false;
+      updateRecap();
+    } catch (e) {
+      isRestoringDraft = false;
+    }
+  }
+
   function updateRecap(){
+    syncPromoValue();
     var picked = selectedMatieres();
     var t = totals(picked);
     $('r-heures').textContent = t.heures + ' h';
@@ -1026,6 +1145,7 @@ window.PROGRAMS = [
     // Une demande peut ne contenir que des matières sans volume horaire (ex. soutenance) :
     // on exige au moins une matière cochée, pas un volume > 0.
     submitBtn.disabled = !(identOk && picked.length > 0 && emailOk() && telOk() && exoOk);
+    saveDraft();
   }
 
   function flagField(id, errId, ok){
@@ -1045,6 +1165,35 @@ window.PROGRAMS = [
   $('tel').addEventListener('input', function(){ updateRecap(); });
   $('tel').addEventListener('blur', function(){ flagField('tel', 'tel-err', telOk()); });
   ['m-nom','m-prenom','m-code','m-promo'].forEach(function(id){ $(id).addEventListener('input', updateRecap); });
+  $('m-nom').addEventListener('blur', function(){
+    var v = $('m-nom').value.trim();
+    if (v) { $('m-nom').value = v.toUpperCase(); updateRecap(); }
+  });
+  $('m-prenom').addEventListener('blur', function(){
+    var v = $('m-prenom').value.trim();
+    if (v) {
+      $('m-prenom').value = v.replace(/\S+/g, function(w){
+        return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+      });
+      updateRecap();
+    }
+  });
+  if (promoSelectEl){
+    promoSelectEl.addEventListener('change', function(){
+      syncPromoValue();
+      if (promoSelectEl.value === 'autre' && promoCustomEl) promoCustomEl.focus();
+      updateRecap();
+    });
+  }
+  if (promoCustomEl){
+    promoCustomEl.addEventListener('input', function(){ syncPromoValue(); updateRecap(); });
+    promoCustomEl.addEventListener('blur', function(){
+      var formatted = formatPromotionCase(promoCustomEl.value);
+      if (formatted) promoCustomEl.value = formatted;
+      syncPromoValue();
+      updateRecap();
+    });
+  }
   exoCheck.addEventListener('change', function(){ exoFieldsEl.hidden = !exoCheck.checked; updateRecap(); });
   exoMotif.addEventListener('change', updateRecap);
 
@@ -1317,6 +1466,7 @@ window.PROGRAMS = [
   });
   $('print-btn').addEventListener('click', function(){ window.print(); });
   $('restart-btn').addEventListener('click', function(){
+    clearDraft();
     formEl.reset();
     exoFieldsEl.hidden = true;
     $('result').hidden = true;
@@ -1324,6 +1474,8 @@ window.PROGRAMS = [
     $('email-err').hidden = true; $('tel-err').hidden = true;
     lastSubmission = null;
     exoProof = null;
+    if (promoSelectEl) promoSelectEl.value = '2026-2027';
+    if (promoCustomEl) { promoCustomEl.value = ''; promoCustomEl.hidden = true; }
     if (exoFileInfoEl) exoFileInfoEl.textContent = "Si vous joignez une photo (JPG/PNG), elle sera directement intégrée en Annexe (Page 2) de votre fiche PDF !";
     if (activeProgram) activateProgram(activeProgram);
     formEl.hidden = false;
@@ -1335,6 +1487,11 @@ window.PROGRAMS = [
     setTimeout(function(){ t.classList.remove('show'); }, 2400);
   }
 
+  restoreDraft();
+  if (!activeProgram && programmeNames.length === 1){
+    progSel.value = programmeNames[0];
+    populateNiveaux(programmeNames[0]);
+  }
   flushQueue();
   window.addEventListener('online', flushQueue);
 })();
