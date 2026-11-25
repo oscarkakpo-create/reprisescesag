@@ -281,6 +281,15 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
   display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;
 }
 .btn-print-single:hover{background:var(--b-soft);border-color:var(--b);transform:translateY(-1px)}
+.btn-return-home{
+  font:inherit;font-size:13.5px;font-weight:700;padding:12px 22px;border-radius:11px;
+  border:1.5px solid var(--border);background:var(--card);color:var(--muted);
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .15s;
+  box-shadow:0 2px 6px rgba(15,23,42,.04);
+}
+.btn-return-home:hover{
+  border-color:var(--b2);background:var(--b-soft);color:var(--b);transform:translateY(-1px);
+}
 .pdf-banner{
   background:linear-gradient(135deg,var(--g-soft),var(--b-soft));
   border:1.5px solid #86efac;border-radius:12px;padding:14px 16px;
@@ -641,8 +650,8 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
     <div id="doc" class="doc"></div>
     <div id="doc-letter" class="doc" hidden></div>
 
-    <div class="actions-sub" style="justify-content:center;margin-top:8px">
-      <button class="ghost" id="restart-btn" type="button">↺ Déposer une nouvelle demande</button>
+    <div class="actions-sub" style="justify-content:center;margin-top:14px">
+      <button class="btn-return-home" id="restart-btn" type="button">🏠 Terminer et retourner à la page d'accueil</button>
     </div>
   </section>
 
@@ -2034,15 +2043,21 @@ window.PROGRAMS = [
   if ($('print-both-btn')) $('print-both-btn').addEventListener('click', printBothPieces);
   if ($('print-single-btn')) $('print-single-btn').addEventListener('click', printCurrentPiece);
 
-  $('restart-btn').addEventListener('click', function(){
+  function returnToLandingPage(){
     clearDraft();
     formEl.reset();
     exoFieldsEl.hidden = true;
+    formEl.hidden = true;
     $('result').hidden = true;
     ['email','tel'].forEach(function(id){ $(id).classList.remove('invalid'); });
     $('email-err').hidden = true; $('tel-err').hidden = true;
     lastSubmission = null;
     exoProof = null;
+    activeProgram = null;
+    current = null;
+    manualRows = [];
+    manualRowSeq = 0;
+
     if (sigCanvas){
       var sCtx = sigCanvas.getContext('2d');
       sCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
@@ -2051,6 +2066,8 @@ window.PROGRAMS = [
     signatureDataUrl = null;
     if (sigHint) sigHint.classList.remove('hidden');
     if (sigStatusBadge) sigStatusBadge.hidden = true;
+
+    $('doc').innerHTML = '';
     $('doc-letter').innerHTML = '';
     $('doc-letter').hidden = true;
     $('doc').hidden = false;
@@ -2058,14 +2075,29 @@ window.PROGRAMS = [
       tabFicheEl.classList.add('active');
       tabLetterEl.classList.remove('active');
     }
+
     if (promoSelectEl) promoSelectEl.value = '2026-2027';
     if (promoCustomEl) { promoCustomEl.value = ''; promoCustomEl.hidden = true; }
     if (exoFileInfoEl) exoFileInfoEl.textContent = "Si vous joignez une photo (JPG/PNG), elle sera directement intégrée en Annexe (Page 2) de votre fiche PDF !";
-    if (activeProgram) activateProgram(activeProgram);
-    formEl.hidden = false;
-    setViewAddress('formulaire', 'Demande de reprise' + (activeProgram ? (' — ' + activeProgram.niveau) : ''));
-    setTimeout(function(){ if (typeof syncSignatureCanvas === 'function') syncSignatureCanvas(); }, 120);
-  });
+
+    // Réinitialisation des menus déroulants vers la page d'accueil
+    if (programmeNames.length === 1){
+      progSel.value = programmeNames[0];
+      populateNiveaux(programmeNames[0]);
+      niveauSel.selectedIndex = 0;
+    } else {
+      progSel.selectedIndex = 0;
+      resetSelect(niveauSel, "Choisir d'abord un programme…");
+      niveauSel.disabled = true;
+    }
+    $('bar-sub').textContent = 'Choisissez votre programme et votre niveau pour accéder à votre formulaire de reprise.';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setViewAddress('accueil', 'CESAG — Accueil & Reprises');
+    showToast('✓ Session terminée — Retour à la page d\'accueil');
+  }
+
+  $('restart-btn').addEventListener('click', returnToLandingPage);
 
   function showToast(msg){
     var t = $('toast');
