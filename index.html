@@ -249,12 +249,16 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
   transition:all .15s;display:inline-flex;align-items:center;gap:5px;
 }
 .btn-clear-sig:hover{color:var(--red);border-color:#fca5a5;background:#fef2f2}
+.sig-status-badge{
+  font-size:11.5px;font-weight:700;color:var(--g);background:var(--g-soft);
+  border:1px solid #86efac;padding:3px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:4px;
+}
 .canvas-wrap{
   position:relative;width:100%;height:130px;background:#ffffff;border:1.5px solid #cbd5e1;
   border-radius:10px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.03);
 }
 #sig-canvas{
-  width:100%;height:100%;display:block;touch-action:none;cursor:crosshair;
+  width:100%!important;height:100%!important;display:block;touch-action:none;cursor:crosshair;
 }
 .canvas-hint{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
@@ -263,6 +267,20 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
   transition:opacity .2s;white-space:nowrap;
 }
 .canvas-hint.hidden{opacity:0}
+
+/* Actions à deux boutons sur l'export */
+.actions-two{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:12px;
+  margin-top:6px;
+}
+.btn-print-single{
+  font:inherit;font-size:14px;font-weight:700;padding:13px 18px;border-radius:12px;
+  border:1.5px solid var(--b2);background:#fff;color:var(--b);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;
+}
+.btn-print-single:hover{background:var(--b-soft);border-color:var(--b);transform:translateY(-1px)}
 .pdf-banner{
   background:linear-gradient(135deg,var(--g-soft),var(--b-soft));
   border:1.5px solid #86efac;border-radius:12px;padding:14px 16px;
@@ -427,14 +445,30 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
 .toast.show{opacity:1}
 [hidden]{display:none!important}
 @media print{
-  .hero,.actions-main,.actions-sub,.pdf-banner,.courrier-banner,.doc-tabs,.hint,.status,#form,#program-card,.step-label,footer{display:none!important}
+  .hero,.actions-two,.actions-sub,.pdf-banner,.courrier-banner,.doc-tabs,.hint,.status,#form,#program-card,.step-label,footer{display:none!important}
   body{background:#fff;padding:0;margin:0}
   .card{border:none!important;box-shadow:none!important;padding:0!important;margin:0!important}
   .doc{border:none!important;box-shadow:none!important;padding:0!important;margin:0!important}
+  
+  /* Mode 1: Impression des 2 pièces ensemble */
+  body.print-both-mode #doc{
+    display:block!important;
+    page-break-after:always!important;
+    break-after:page!important;
+  }
+  body.print-both-mode #doc-letter{
+    display:block!important;
+    page-break-before:always!important;
+    break-before:page!important;
+  }
+  
+  /* Mode 2: Impression de la lettre seule */
   body.print-letter-mode #doc{display:none!important}
   body.print-letter-mode #doc-letter{display:block!important}
-  body:not(.print-letter-mode) #doc{display:block!important}
-  body:not(.print-letter-mode) #doc-letter{display:none!important}
+  
+  /* Mode 3: Impression de la fiche seule */
+  body:not(.print-both-mode):not(.print-letter-mode) #doc{display:block!important}
+  body:not(.print-both-mode):not(.print-letter-mode) #doc-letter{display:none!important}
 }
 </style>
 </head>
@@ -558,7 +592,10 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
       <div class="signature-box" style="margin-top:10px">
         <div class="signature-header">
           <label for="sig-canvas">✍️ Signez directement avec votre doigt (sur téléphone/tablette) ou à la souris :</label>
-          <button type="button" class="btn-clear-sig" id="clear-sig-btn">↺ Effacer / Recommencer</button>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="sig-status-badge" id="sig-status-badge" hidden>✓ Signature enregistrée</span>
+            <button type="button" class="btn-clear-sig" id="clear-sig-btn">↺ Effacer / Recommencer</button>
+          </div>
         </div>
         <div class="canvas-wrap">
           <canvas id="sig-canvas" width="600" height="140"></canvas>
@@ -569,62 +606,44 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
     </div>
 
     <button type="submit" class="primary" id="submit-btn" disabled>Valider ma demande et générer ma facture</button>
-    <p class="hint">En validant, vous confirmez les matières ci-dessus. Votre demande sera transmise au secrétariat et vous devrez également télécharger ou imprimer votre fiche, la signer et la remettre au secrétariat.</p>
+    <p class="hint">En validant, vous confirmez les matières ci-dessus. Votre demande sera transmise au secrétariat et vous pourrez imprimer ou enregistrer en PDF vos documents signés.</p>
   </form>
 
   <section id="result" hidden class="card">
-    <div class="step-label"><span class="step-num">✓</span>Demande enregistrée &amp; documents prêts</div>
+    <div class="step-label"><span class="step-num">✓</span>Demande enregistrée &amp; dossier prêt</div>
     <div class="status" id="send-status" hidden></div>
 
-    <!-- Bannière Fiche de reprise -->
-    <div class="pdf-banner">
-      <div class="pdf-banner-text">
-        <strong>📄 1. Fiche officielle de reprise &amp; facture</strong>
-        <span>Cliquez sur « Exporter ma fiche en PDF » pour l'enregistrer directement (avec QR code de vérification).</span>
-      </div>
-    </div>
-    <div class="actions-main">
-      <button class="primary" id="pdf-btn" type="button">📥 Exporter ma fiche en PDF</button>
-      <button class="secondary" id="email-sec-btn" type="button">✉️ Transmettre par email au secrétariat</button>
-      <button class="secondary" id="print-btn" type="button">🖨️ Imprimer la fiche</button>
-    </div>
-
-    <!-- Bannière Service Courrier (Lettre au DG) avec couleur rouge pâle animé -->
-    <div class="courrier-banner">
+    <div class="courrier-banner" style="margin-top:0">
       <div class="courrier-header">
-        <span class="courrier-badge"><span class="pulse-dot-red"></span>Exigence Service Courrier</span>
-        <strong>Lettre officielle adressée à Mme le Directeur Général du CESAG</strong>
+        <span class="courrier-badge"><span class="pulse-dot-red"></span>Dossier officiel complet</span>
+        <strong>Fiche de reprise &amp; Lettre à Mme le Directeur Général</strong>
       </div>
-      <p class="courrier-desc">Le service courrier du CESAG sollicite obligatoirement cette lettre standardisée reprenant votre cursus, vos matières et vos coordonnées pour transmission à la Direction Générale.</p>
-      <div class="courrier-actions">
-        <button class="btn-letter-animated" id="letter-pdf-btn" type="button">
+      <p class="courrier-desc">Votre dossier est prêt. Choisissez ci-dessous d'imprimer ou d'enregistrer en PDF les <strong>deux pièces ensemble</strong> (recommandé pour la scolarité et le courrier du DG) ou uniquement la pièce affichée.</p>
+      
+      <!-- Exactement DEUX boutons clairs et fidèles -->
+      <div class="actions-two">
+        <button class="btn-letter-animated" id="print-both-btn" type="button">
           <span class="pulse-dot-red"></span>
-          📥 Exporter la Lettre au DG (PDF)
+          🖨️ Imprimer / PDF (Les 2 pièces ensemble)
         </button>
-        <button class="btn-letter-print" id="letter-print-btn" type="button">
-          🖨️ Imprimer la lettre
+        <button class="btn-print-single" id="print-single-btn" type="button">
+          📄 Imprimer / PDF (La pièce affichée uniquement)
         </button>
       </div>
     </div>
 
     <!-- Onglets de prévisualisation -->
     <div class="doc-tabs">
-      <button type="button" class="doc-tab active" id="tab-doc-fiche">📄 Aperçu Fiche de reprise</button>
-      <button type="button" class="doc-tab" id="tab-doc-letter">✉️ Aperçu Lettre à Mme le DG <span class="tab-badge-red">Courrier</span></button>
+      <button type="button" class="doc-tab active" id="tab-doc-fiche">📄 1. Fiche de reprise &amp; Facture</button>
+      <button type="button" class="doc-tab" id="tab-doc-letter">✉️ 2. Lettre à Mme le DG <span class="tab-badge-red">Courrier</span></button>
     </div>
 
     <div id="doc" class="doc"></div>
     <div id="doc-letter" class="doc" hidden></div>
 
-    <div class="actions-sub">
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="ghost" id="download-btn" type="button">Télécharger la fiche (.html)</button>
-        <button class="ghost" id="download-letter-html-btn" type="button">Télécharger la lettre (.html)</button>
-        <button class="ghost" id="json-btn" type="button" hidden>Télécharger le fichier .json</button>
-      </div>
-      <button class="ghost" id="restart-btn" type="button">↺ Nouvelle demande</button>
+    <div class="actions-sub" style="justify-content:center;margin-top:8px">
+      <button class="ghost" id="restart-btn" type="button">↺ Déposer une nouvelle demande</button>
     </div>
-    <p class="hint">Imprimez ou téléchargez les <strong>deux documents</strong> (Fiche de reprise + Lettre officielle au Directeur Général), signez-les et déposez-les respectivement au secrétariat DPGELM et au service courrier.</p>
   </section>
 
   <footer class="card" style="padding:16px 20px;font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:4px">
@@ -1108,6 +1127,8 @@ window.PROGRAMS = [
       $('m-promo').value = '';
     }
     renderMatieres();
+    setViewAddress('formulaire', 'Demande de reprise — ' + prog.niveau);
+    setTimeout(function(){ if (typeof syncSignatureCanvas === 'function') syncSignatureCanvas(); }, 120);
   }
 
   $('student-search').addEventListener('input', function(){
@@ -1765,37 +1786,83 @@ window.PROGRAMS = [
     });
   }
 
+  // ---------- Navigation / URL barre d'adresse ----------
+  function setViewAddress(hash, title){
+    var cleanHash = hash.charAt(0) === '#' ? hash : ('#' + hash);
+    var docTitle = title || 'CESAG — Reprises';
+    document.title = docTitle;
+    try {
+      if (window.location.hash !== cleanHash){
+        window.history.pushState({ hash: cleanHash }, docTitle, cleanHash);
+      } else {
+        window.history.replaceState({ hash: cleanHash }, docTitle, cleanHash);
+      }
+    } catch(e){}
+  }
+
+  window.addEventListener('popstate', function(){
+    var h = window.location.hash;
+    if (h === '#programme' || !h){
+      $('result').hidden = true;
+      formEl.hidden = true;
+      document.title = 'CESAG — Choix du programme de reprise';
+    } else if (h === '#formulaire'){
+      $('result').hidden = true;
+      if (activeProgram){
+        formEl.hidden = false;
+        document.title = 'CESAG — Formulaire de reprise (' + activeProgram.niveau + ')';
+        setTimeout(function(){ if (typeof syncSignatureCanvas === 'function') syncSignatureCanvas(); }, 100);
+      }
+    } else if (h.indexOf('#dossier') === 0 && lastSubmission){
+      formEl.hidden = true;
+      $('result').hidden = false;
+      if (h === '#dossier-lettre-dg' && $('tab-doc-letter')){
+        $('tab-doc-letter').click();
+      } else if ($('tab-doc-fiche')){
+        $('tab-doc-fiche').click();
+      }
+    }
+  });
+
   // ---------- Signature au doigt ou à la souris ----------
   var sigCanvas = $('sig-canvas');
   var sigHint = $('canvas-hint');
+  var sigStatusBadge = $('sig-status-badge');
   var clearSigBtn = $('clear-sig-btn');
   var signatureDataUrl = null;
   var isDrawing = false;
   var hasDrawn = false;
 
-  function initSignaturePad(){
+  function syncSignatureCanvas(){
     if (!sigCanvas) return;
+    var rect = sigCanvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    var dpr = window.devicePixelRatio || 1;
+    var targetW = Math.round(rect.width * dpr);
+    var targetH = Math.round(rect.height * dpr);
     var ctx = sigCanvas.getContext('2d');
 
-    function syncDimensions(){
-      var rect = sigCanvas.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      var dpr = window.devicePixelRatio || 1;
+    if (sigCanvas.width !== targetW || sigCanvas.height !== targetH){
       var prev = (hasDrawn && signatureDataUrl) ? signatureDataUrl : null;
-      sigCanvas.width = Math.round(rect.width * dpr);
-      sigCanvas.height = Math.round(rect.height * dpr);
+      sigCanvas.width = targetW;
+      sigCanvas.height = targetH;
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
-      ctx.strokeStyle = '#0a4ea1';
-      ctx.lineWidth = 2.4;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
       if (prev){
         var img = new Image();
         img.onload = function(){ ctx.drawImage(img, 0, 0, rect.width, rect.height); };
         img.src = prev;
       }
     }
+    ctx.strokeStyle = '#0a4ea1';
+    ctx.lineWidth = 2.4;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }
+
+  function initSignaturePad(){
+    if (!sigCanvas) return;
+    var ctx = sigCanvas.getContext('2d');
 
     function getCoords(e){
       var rect = sigCanvas.getBoundingClientRect();
@@ -1811,6 +1878,7 @@ window.PROGRAMS = [
       if (e.cancelable && (e.type === 'touchstart' || e.type === 'pointerdown')) {
         if (e.type === 'touchstart') e.preventDefault();
       }
+      syncSignatureCanvas();
       isDrawing = true;
       var p = getCoords(e);
       ctx.beginPath();
@@ -1825,6 +1893,7 @@ window.PROGRAMS = [
       ctx.lineTo(p.x, p.y);
       ctx.stroke();
       hasDrawn = true;
+      if (sigStatusBadge) sigStatusBadge.hidden = false;
     }
 
     function onEnd(e){
@@ -1833,6 +1902,7 @@ window.PROGRAMS = [
       if (hasDrawn){
         try {
           signatureDataUrl = sigCanvas.toDataURL('image/png');
+          if (sigStatusBadge) sigStatusBadge.hidden = false;
         } catch(err){}
       }
     }
@@ -1863,11 +1933,11 @@ window.PROGRAMS = [
         hasDrawn = false;
         signatureDataUrl = null;
         if (sigHint) sigHint.classList.remove('hidden');
+        if (sigStatusBadge) sigStatusBadge.hidden = true;
       });
     }
 
-    window.addEventListener('resize', function(){ setTimeout(syncDimensions, 150); });
-    setTimeout(syncDimensions, 60);
+    window.addEventListener('resize', function(){ setTimeout(syncSignatureCanvas, 150); });
   }
 
   // ---------- Soumission ----------
@@ -1899,157 +1969,42 @@ window.PROGRAMS = [
     }
     formEl.hidden = true;
     $('result').hidden = false;
-    $('json-btn').hidden = true;
     window.scrollTo(0, 0);
+    setViewAddress('dossier', 'Dossier complet — ' + lastSubmission.ref);
     sendSubmission(lastSubmission.payload);
   });
 
-  function saveFile(content, type, name){
-    var url = URL.createObjectURL(new Blob([content], { type: type }));
-    var a = document.createElement('a');
-    a.href = url; a.download = name;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+  // ---------- Impression directe / PDF (Les 2 pièces vs Pièce unique) ----------
+  function printBothPieces(){
+    if (!lastSubmission) return;
+    document.body.classList.remove('print-letter-mode');
+    document.body.classList.add('print-both-mode');
+    var docFiche = $('doc');
+    var docLetter = $('doc-letter');
+    if (docFiche) docFiche.hidden = false;
+    if (docLetter) docLetter.hidden = false;
+    window.print();
+    setTimeout(function(){
+      document.body.classList.remove('print-both-mode');
+      var isTabLetter = $('tab-doc-letter') && $('tab-doc-letter').classList.contains('active');
+      if (docFiche) docFiche.hidden = isTabLetter;
+      if (docLetter) docLetter.hidden = !isTabLetter;
+    }, 1200);
   }
 
-  function exportDirectPDF(){
+  function printCurrentPiece(){
     if (!lastSubmission) return;
-    var btn = $('pdf-btn');
-    var docEl = $('doc');
-    if (typeof window.html2pdf === 'function'){
-      var prevText = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = '⏳ Génération du PDF en cours…';
-      var cleanNom = String(lastSubmission.student.nom || 'CESAG').replace(/[^A-Za-z0-9_-]/g, '_');
-      var fileName = 'Reprise_CESAG_' + cleanNom + '_' + lastSubmission.ref + '.pdf';
-      var opt = {
-        margin:       [8, 8, 8, 8],
-        filename:     fileName,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: '#ffffff',
-          scrollY: 0,
-          scrollX: 0,
-          windowWidth: 1024
-        },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    {
-          mode: ['avoid-all', 'css', 'legacy'],
-          avoid: ['tr', '.sig', '.doc-head', '.doc-annex', '.recap']
-        }
-      };
-      window.html2pdf().set(opt).from(docEl).save().then(function(){
-        btn.disabled = false;
-        btn.textContent = prevText;
-        showToast('PDF téléchargé : ' + fileName);
-      }).catch(function(){
-        btn.disabled = false;
-        btn.textContent = prevText;
-        window.print();
-      });
+    var isTabLetter = $('tab-doc-letter') && $('tab-doc-letter').classList.contains('active');
+    document.body.classList.remove('print-both-mode');
+    if (isTabLetter){
+      document.body.classList.add('print-letter-mode');
     } else {
-      window.print();
+      document.body.classList.remove('print-letter-mode');
     }
-  }
-
-  function exportLetterPDF(){
-    if (!lastSubmission) return;
-    var btn = $('letter-pdf-btn');
-    var letterEl = $('doc-letter');
-    if (!letterEl) return;
-    if (typeof window.html2pdf === 'function'){
-      var prevHtml = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="pulse-dot-red"></span> ⏳ Génération de la lettre PDF…';
-      var wasHidden = letterEl.hidden;
-      letterEl.hidden = false;
-      var cleanNom = String(lastSubmission.student.nom || 'CESAG').replace(/[^A-Za-z0-9_-]/g, '_');
-      var fileName = 'Lettre_DG_CESAG_' + cleanNom + '_' + lastSubmission.ref + '.pdf';
-      var opt = {
-        margin:       [8, 8, 8, 8],
-        filename:     fileName,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: '#ffffff',
-          scrollY: 0,
-          scrollX: 0,
-          windowWidth: 1024
-        },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    {
-          mode: ['avoid-all', 'css', 'legacy'],
-          avoid: ['tr', '.letter-signatures', '.letter-top', '.letter-subject', '.letter-exo-box']
-        }
-      };
-      window.html2pdf().set(opt).from(letterEl).save().then(function(){
-        btn.disabled = false;
-        btn.innerHTML = prevHtml;
-        var tabLetter = $('tab-doc-letter');
-        if (wasHidden && tabLetter && !tabLetter.classList.contains('active')){
-          letterEl.hidden = true;
-        }
-        showToast('Lettre au DG téléchargée : ' + fileName);
-      }).catch(function(){
-        btn.disabled = false;
-        btn.innerHTML = prevHtml;
-        var tabLetter = $('tab-doc-letter');
-        if (wasHidden && tabLetter && !tabLetter.classList.contains('active')){
-          letterEl.hidden = true;
-        }
-        printLetterDirectly();
-      });
-    } else {
-      printLetterDirectly();
-    }
-  }
-
-  function printLetterDirectly(){
-    if (!lastSubmission) return;
-    var tabLetter = $('tab-doc-letter');
-    var tabFiche = $('tab-doc-fiche');
-    if (tabLetter && tabFiche){
-      tabLetter.classList.add('active');
-      tabFiche.classList.remove('active');
-      $('doc').hidden = true;
-      $('doc-letter').hidden = false;
-    }
-    document.body.classList.add('print-letter-mode');
     window.print();
     setTimeout(function(){
       document.body.classList.remove('print-letter-mode');
     }, 1200);
-  }
-
-  function sendEmailToSecretariat(){
-    if (!lastSubmission) return;
-    var s = lastSubmission.student;
-    var t = lastSubmission.totaux;
-    var to = 'mame.coulibaly@cesag.edu.sn,isabelle.Mandiouba@cesag.edu.sn,jean.agopome@cesag.edu.sn';
-    var subject = '[Reprise CESAG ' + lastSubmission.ref + '] ' + s.nom + ' ' + s.prenom + ' — ' + (activeProgram ? activeProgram.niveau : s.promo);
-    var matList = lastSubmission.picked.map(function(m){
-      var semLabel = m.custom ? m.sem : ('S' + m.sem);
-      return '  - [' + semLabel + '] ' + m.nom + ' (' + m.h + ' h) : ' + fmt(m.h * TARIF_HEURE);
-    }).join('\n');
-    var exoLine = lastSubmission.exo
-      ? ('OUI — Motif : ' + lastSubmission.exo.motif + '\n(Veuillez trouver ci-joint ma fiche PDF signée ainsi que mon justificatif d\'exonération)')
-      : 'NON (Veuillez trouver ci-joint ma fiche PDF signée)';
-    var body =
-      'Bonjour au Secrétariat DPGELM,\n\n' +
-      'Je vous transmets par le présent message ma demande de reprise de matière(s) :\n\n' +
-      '• Référence : ' + lastSubmission.ref + '\n' +
-      '• Étudiant(e) : ' + s.nom + ' ' + s.prenom + (s.code ? ' (N° ' + s.code + ')' : '') + '\n' +
-      '• Classe / Promo : ' + s.promo + '\n' +
-      '• Contacts : ' + lastSubmission.email + ' / ' + lastSubmission.tel + '\n\n' +
-      'Matière(s) sélectionnée(s) :\n' + matList + '\n\n' +
-      '• Volume horaire total : ' + t.heures + ' h\n' +
-      '• Total à régler (frais d\'inscription inclus) : ' + fmt(t.total) + '\n' +
-      '• Demande d\'exonération : ' + exoLine + '\n\n' +
-      'Cordialement,\n' + s.nom + ' ' + s.prenom;
-    window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
   }
 
   // Onglets de prévisualisation (Fiche vs Lettre DG)
@@ -2061,49 +2016,24 @@ window.PROGRAMS = [
       tabLetterEl.classList.remove('active');
       $('doc').hidden = false;
       $('doc-letter').hidden = true;
+      if (lastSubmission){
+        setViewAddress('dossier-fiche', 'Fiche de reprise — ' + lastSubmission.ref);
+      }
     });
     tabLetterEl.addEventListener('click', function(){
       tabLetterEl.classList.add('active');
       tabFicheEl.classList.remove('active');
       $('doc').hidden = true;
       $('doc-letter').hidden = false;
+      if (lastSubmission){
+        setViewAddress('dossier-lettre-dg', 'Lettre officielle au DG — ' + lastSubmission.ref);
+      }
     });
   }
 
-  $('pdf-btn').addEventListener('click', exportDirectPDF);
-  $('email-sec-btn').addEventListener('click', sendEmailToSecretariat);
-  if ($('letter-pdf-btn')) $('letter-pdf-btn').addEventListener('click', exportLetterPDF);
-  if ($('letter-print-btn')) $('letter-print-btn').addEventListener('click', printLetterDirectly);
+  if ($('print-both-btn')) $('print-both-btn').addEventListener('click', printBothPieces);
+  if ($('print-single-btn')) $('print-single-btn').addEventListener('click', printCurrentPiece);
 
-  $('download-btn').addEventListener('click', function(){
-    if (!lastSubmission) return;
-    saveFile(buildDocHTML(lastSubmission, true), 'text/html', lastSubmission.ref + '.html');
-    showToast('Document HTML téléchargé');
-  });
-  if ($('download-letter-html-btn')){
-    $('download-letter-html-btn').addEventListener('click', function(){
-      if (!lastSubmission) return;
-      saveFile(buildLetterHTML(lastSubmission, true), 'text/html', 'Lettre_DG_' + lastSubmission.ref + '.html');
-      showToast('Lettre au DG (HTML) téléchargée');
-    });
-  }
-  $('json-btn').addEventListener('click', function(){
-    if (!lastSubmission) return;
-    saveFile(JSON.stringify(lastSubmission.payload, null, 2), 'application/json', lastSubmission.ref + '.json');
-    showToast('Fichier .json téléchargé');
-  });
-  $('print-btn').addEventListener('click', function(){
-    var tabLetter = $('tab-doc-letter');
-    var tabFiche = $('tab-doc-fiche');
-    if (tabLetter && tabFiche){
-      tabFiche.classList.add('active');
-      tabLetter.classList.remove('active');
-      $('doc').hidden = false;
-      $('doc-letter').hidden = true;
-    }
-    document.body.classList.remove('print-letter-mode');
-    window.print();
-  });
   $('restart-btn').addEventListener('click', function(){
     clearDraft();
     formEl.reset();
@@ -2120,6 +2050,7 @@ window.PROGRAMS = [
     hasDrawn = false;
     signatureDataUrl = null;
     if (sigHint) sigHint.classList.remove('hidden');
+    if (sigStatusBadge) sigStatusBadge.hidden = true;
     $('doc-letter').innerHTML = '';
     $('doc-letter').hidden = true;
     $('doc').hidden = false;
@@ -2132,6 +2063,8 @@ window.PROGRAMS = [
     if (exoFileInfoEl) exoFileInfoEl.textContent = "Si vous joignez une photo (JPG/PNG), elle sera directement intégrée en Annexe (Page 2) de votre fiche PDF !";
     if (activeProgram) activateProgram(activeProgram);
     formEl.hidden = false;
+    setViewAddress('formulaire', 'Demande de reprise' + (activeProgram ? (' — ' + activeProgram.niveau) : ''));
+    setTimeout(function(){ if (typeof syncSignatureCanvas === 'function') syncSignatureCanvas(); }, 120);
   });
 
   function showToast(msg){
@@ -2145,6 +2078,9 @@ window.PROGRAMS = [
   if (!activeProgram && programmeNames.length === 1){
     progSel.value = programmeNames[0];
     populateNiveaux(programmeNames[0]);
+  }
+  if (!activeProgram){
+    setViewAddress('programme', 'CESAG — Choix du programme de reprise');
   }
   flushQueue();
   window.addEventListener('online', flushQueue);
