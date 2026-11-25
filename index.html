@@ -302,12 +302,19 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
 
 /* Bannière Courrier & Bouton Export Rouge Pâle Animé */
 .courrier-banner{
-  background:linear-gradient(135deg, #fff7f7 0%, #fee2e2 55%, #fed7d7 100%);
-  border:1.8px solid #fca5a5;border-radius:14px;padding:16px 18px;
-  display:flex;flex-direction:column;gap:12px;
-  box-shadow:0 6px 18px -3px rgba(239,68,68,.12);
+  background:var(--input-bg);
+  border:1px solid var(--border);border-radius:14px;padding:14px 18px;
+  display:flex;flex-direction:column;gap:8px;
   margin-top:6px;
 }
+.courrier-banner .courrier-header strong{color:var(--text)}
+.courrier-banner .courrier-desc{color:var(--muted)}
+.btn-print-all{
+  font:inherit;font-size:14.5px;font-weight:700;padding:13px 20px;border-radius:12px;
+  border:1.5px solid var(--b);background:var(--b);color:#fff;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;
+}
+.btn-print-all:hover{filter:brightness(1.08);transform:translateY(-1px)}
 .courrier-header{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .courrier-badge{
   font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
@@ -624,31 +631,24 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
 
     <div class="courrier-banner" style="margin-top:0">
       <div class="courrier-header">
-        <span class="courrier-badge"><span class="pulse-dot-red"></span>Dossier officiel complet</span>
-        <strong>Fiche de reprise &amp; Lettre à Mme le Directeur Général</strong>
+        <strong>Dossier complet : fiche de reprise &amp; lettre à Mme le Directeur Général</strong>
       </div>
-      <p class="courrier-desc">Votre dossier est prêt. Choisissez ci-dessous d'imprimer ou d'enregistrer en PDF les <strong>deux pièces ensemble</strong> (recommandé pour la scolarité et le courrier du DG) ou uniquement la pièce affichée.</p>
-      
-      <!-- Exactement DEUX boutons clairs et fidèles -->
-      <div class="actions-two">
-        <button class="btn-letter-animated" id="print-both-btn" type="button">
-          <span class="pulse-dot-red"></span>
-          🖨️ Imprimer / PDF (Les 2 pièces ensemble)
-        </button>
-        <button class="btn-print-single" id="print-single-btn" type="button">
-          📄 Imprimer / PDF (La pièce affichée uniquement)
-        </button>
-      </div>
+      <p class="courrier-desc">Vérifiez l'aperçu des deux pièces ci-dessous, puis imprimez ou enregistrez le dossier complet en PDF.</p>
     </div>
 
     <!-- Onglets de prévisualisation -->
     <div class="doc-tabs">
       <button type="button" class="doc-tab active" id="tab-doc-fiche">📄 1. Fiche de reprise &amp; Facture</button>
-      <button type="button" class="doc-tab" id="tab-doc-letter">✉️ 2. Lettre à Mme le DG <span class="tab-badge-red">Courrier</span></button>
+      <button type="button" class="doc-tab" id="tab-doc-letter">✉️ 2. Lettre à Mme le DG</button>
     </div>
 
     <div id="doc" class="doc"></div>
     <div id="doc-letter" class="doc" hidden></div>
+
+    <!-- Un seul bouton : imprime tout le dossier, après l'aperçu -->
+    <div class="actions-two">
+      <button class="btn-print-all" id="print-both-btn" type="button">🖨️ Imprimer / PDF — dossier complet</button>
+    </div>
 
     <div class="actions-sub" style="justify-content:center;margin-top:14px">
       <button class="btn-return-home" id="restart-btn" type="button">🏠 Terminer et retourner à la page d'accueil</button>
@@ -1598,8 +1598,6 @@ window.PROGRAMS = [
               '<p><strong>Programme :</strong> ' + esc(progTitle) + '</p>' +
               '<p><strong>Classe / Niveau :</strong> ' + esc(niveauTitle) + '</p>' +
               '<p><strong>Promotion :</strong> ' + esc(s.promo) + '</p>' +
-              '<p><strong>Email :</strong> ' + esc(sub.email) + '</p>' +
-              '<p><strong>Téléphone :</strong> ' + esc(sub.tel) + '</p>' +
             '</div>' +
           '</div>' +
           '<div class="letter-right">' +
@@ -1627,34 +1625,9 @@ window.PROGRAMS = [
           '</p>' +
 
           '<p>' +
-            'Conformément aux délibérations du jury d\'examen et aux dispositions pédagogiques en vigueur au CESAG, je sollicite la réinscription pour la ou les matière(s) récapitulée(s) ci-dessous :' +
+            'Conformément aux délibérations du jury d\'examen et aux dispositions pédagogiques en vigueur au CESAG, je sollicite la réinscription pour les matière(s) détaillée(s) dans la fiche d\'inscription jointe à la présente.' +
+            (sub.exo ? ' Je sollicite également une exonération (totale ou partielle) des frais, sur justificatif joint.' : '') +
           '</p>' +
-
-          '<table class="letter-table">' +
-            '<thead>' +
-              '<tr>' +
-                '<th>Semestre</th>' +
-                '<th>Intitulé de la matière</th>' +
-                '<th class="num">Volume horaire</th>' +
-                '<th class="num">Coût pédagogique</th>' +
-              '</tr>' +
-            '</thead>' +
-            '<tbody>' + rows + '</tbody>' +
-            '<tfoot>' +
-              '<tr>' +
-                '<td colspan="2">Frais d\'inscription administratif à la session de reprise</td>' +
-                '<td class="num">—</td>' +
-                '<td class="num">' + fmt(t.frais) + '</td>' +
-              '</tr>' +
-              '<tr class="tfoot-total">' +
-                '<td colspan="2">Volume total horaire et Montant global des droits</td>' +
-                '<td class="num">' + t.heures + ' h</td>' +
-                '<td class="num">' + fmt(t.total) + '</td>' +
-              '</tr>' +
-            '</tfoot>' +
-          '</table>' +
-
-          exoBlock +
 
           '<p>' +
             'Je m\'engage formellement à assister assidûment à l\'ensemble des séances programmées et à me conformer rigoureusement au règlement intérieur ainsi qu\'aux obligations académiques et déontologiques de l\'institution.' +
@@ -2041,7 +2014,6 @@ window.PROGRAMS = [
   }
 
   if ($('print-both-btn')) $('print-both-btn').addEventListener('click', printBothPieces);
-  if ($('print-single-btn')) $('print-single-btn').addEventListener('click', printCurrentPiece);
 
   function returnToLandingPage(){
     clearDraft();
