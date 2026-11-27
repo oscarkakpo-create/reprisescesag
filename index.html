@@ -505,14 +505,22 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
   </header>
 
   <section class="card" id="program-card">
-    <div class="step-label"><span class="step-num">0</span>Programme concerné</div>
-    <div class="row">
+    <div class="step-label"><span class="step-num">0</span>Orientation &amp; Cursus académique</div>
+    <div class="row" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
       <div class="field">
-        <label for="prog-select">Programme</label>
-        <select id="prog-select"><option value="" disabled selected>Choisir un programme…</option></select>
+        <label for="dir-select">1. Direction pédagogique</label>
+        <select id="dir-select">
+          <option value="" disabled selected>Choisir une direction…</option>
+          <option value="DPGELM">DPGELM — Grande École, Licences &amp; Masters</option>
+          <option value="DPECN">DPECN — Executive, Santé &amp; Campus Numérique</option>
+        </select>
       </div>
       <div class="field">
-        <label for="niveau-select">Niveau / classe</label>
+        <label for="prog-select">2. Programme / Filière</label>
+        <select id="prog-select" disabled><option value="" disabled selected>Choisir d'abord une direction…</option></select>
+      </div>
+      <div class="field">
+        <label for="niveau-select">3. Classe / Niveau</label>
         <select id="niveau-select" disabled><option value="" disabled selected>Choisir d'abord un programme…</option></select>
       </div>
     </div>
@@ -555,6 +563,7 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
         <div class="field">
           <label for="email">Email</label>
           <input id="email" type="email" placeholder="prenom.nom@mail.com" autocomplete="email" required>
+          <span class="hint" style="font-size:11.5px;color:var(--muted);margin-top:4px">Une copie de confirmation de votre dossier vous sera envoyée à cette adresse.</span>
           <span class="err" id="email-err" hidden>Adresse email invalide.</span>
         </div>
         <div class="field">
@@ -636,18 +645,25 @@ button.ghost:hover{border-color:#94a3b8;color:var(--text);background:rgba(148,16
       <p class="courrier-desc">Vérifiez l'aperçu des deux pièces ci-dessous, puis imprimez ou enregistrez le dossier complet en PDF.</p>
     </div>
 
-    <!-- Onglets de prévisualisation -->
-    <div class="doc-tabs">
-      <button type="button" class="doc-tab active" id="tab-doc-fiche">📄 1. Fiche de reprise &amp; Facture</button>
-      <button type="button" class="doc-tab" id="tab-doc-letter">✉️ 2. Lettre à Mme le DG</button>
+    <!-- Dossier complet : les 2 pièces affichées l'une après l'autre sur une seule page fluide sans onglets -->
+    <div class="actions-two" style="margin:16px 0">
+      <button class="btn-print-all" id="print-both-btn" type="button">🖨️ Imprimer / PDF — Dossier complet (2 pièces)</button>
     </div>
 
+    <!-- Pièce 1 : Fiche d'inscription -->
+    <div style="margin:18px 0 8px;font-size:13.5px;font-weight:800;color:var(--g);display:flex;align-items:center;gap:8px">
+      <span>📄 Pièce 1 : Fiche d'inscription &amp; Facture pédagogique</span>
+    </div>
     <div id="doc" class="doc"></div>
-    <div id="doc-letter" class="doc" hidden></div>
 
-    <!-- Un seul bouton : imprime tout le dossier, après l'aperçu -->
-    <div class="actions-two">
-      <button class="btn-print-all" id="print-both-btn" type="button">🖨️ Imprimer / PDF — dossier complet</button>
+    <!-- Pièce 2 : Lettre officielle au DG -->
+    <div style="margin:26px 0 8px;font-size:13.5px;font-weight:800;color:var(--b);display:flex;align-items:center;gap:8px">
+      <span>✉️ Pièce 2 : Lettre officielle de demande adressée à Mme le Directeur Général</span>
+    </div>
+    <div id="doc-letter" class="doc"></div>
+
+    <div class="actions-two" style="margin:20px 0 12px">
+      <button class="btn-print-all" id="print-both-btn-bottom" type="button">🖨️ Imprimer / PDF — Dossier complet (2 pièces)</button>
     </div>
 
     <div class="actions-sub" style="justify-content:center;margin-top:14px">
@@ -683,7 +699,8 @@ window.REPRISE_CONFIG = {
 window.PROGRAMS = [
   {
     id: "lg1",
-    programme: "CESAG PRO",
+    direction: "DPGELM",
+    programme: "Licence en Gestion (LG)",
     niveau: "LG 1 — Licence en Gestion",
     anneeAcademique: "2026-2027",
     promoLabel: "classe LG 1",
@@ -724,7 +741,8 @@ window.PROGRAMS = [
   },
   {
     id: "lg2",
-    programme: "CESAG PRO",
+    direction: "DPGELM",
+    programme: "Licence en Gestion (LG)",
     niveau: "LG 2 — Licence en Gestion",
     anneeAcademique: "2026-2027",
     promoLabel: "classe LG 2",
@@ -769,7 +787,8 @@ window.PROGRAMS = [
   },
   {
     id: "lpsg-egp3",
-    programme: "CESAG PRO",
+    direction: "DPGELM",
+    programme: "Licence en Gestion (LG)",
     niveau: "LG 3 — Entrepreneuriat et Gestion des Projets (EGP)",
     anneeAcademique: "2026-2027",
     promoLabel: "classe LG 3 EGP",
@@ -798,7 +817,8 @@ window.PROGRAMS = [
   },
   {
     id: "ltcf",
-    programme: "CESAG PRO",
+    direction: "DPGELM",
+    programme: "Licence en Gestion (LG)",
     niveau: "LG 3 — Techniques Comptables et Financières (LTCF)",
     anneeAcademique: "2026-2027",
     promoLabel: "classe LG 3 LTCF",
@@ -829,7 +849,8 @@ window.PROGRAMS = [
   },
   {
     id: "tbf",
-    programme: "CESAG PRO",
+    direction: "DPGELM",
+    programme: "Licence en Gestion (LG)",
     niveau: "LG 3 — Techniques Bancaires et Financières (TBF)",
     anneeAcademique: "2026-2027",
     promoLabel: "classe LG 3 TBF",
@@ -874,7 +895,8 @@ window.PROGRAMS = [
   },
   {
     id: "lcca1",
-    programme: "CESAG PRO",
+    direction: "DPGELM",
+    programme: "Licence en Comptabilité, Contrôle et Audit (LCCA)",
     niveau: "LCCA 1 — Licence en Comptabilité, Contrôle et Audit",
     anneeAcademique: "2026-2027",
     promoLabel: "classe LCCA 1",
@@ -918,7 +940,8 @@ window.PROGRAMS = [
   },
   {
     id: "lcca2",
-    programme: "CESAG PRO",
+    direction: "DPGELM",
+    programme: "Licence en Comptabilité, Contrôle et Audit (LCCA)",
     niveau: "LCCA 2 — Licence en Comptabilité, Contrôle et Audit",
     anneeAcademique: "2026-2027",
     promoLabel: "classe LCCA 2",
@@ -958,7 +981,8 @@ window.PROGRAMS = [
   },
   {
     id: "cca",
-    programme: "CESAG PRO",
+    direction: "DPGELM",
+    programme: "Licence en Comptabilité, Contrôle et Audit (LCCA)",
     niveau: "LCCA 3 — Comptabilité, Contrôle et Audit",
     anneeAcademique: "2026-2027",
     promoLabel: "classe LCCA 3",
@@ -997,6 +1021,118 @@ window.PROGRAMS = [
       {sem:6, nom:"Normes comptables internationales (IFRS)", h:20},
       {sem:6, nom:"Soutenance / Rapport de stage", h:0}
     ]
+  },
+  // --- DPGELM : Masters & Programme Grande École ---
+  {
+    id: "m_bfcca1",
+    direction: "DPGELM",
+    programme: "Masters & Programme Grande École",
+    niveau: "Master 1 — Banque, Finance, Comptabilité, Contrôle et Audit (BF-CCA)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe Master 1 BF-CCA",
+    manualOnly: true,
+    students: [],
+    catalog: []
+  },
+  {
+    id: "m_bfcca2",
+    direction: "DPGELM",
+    programme: "Masters & Programme Grande École",
+    niveau: "Master 2 — Banque, Finance, Comptabilité, Contrôle et Audit (BF-CCA)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe Master 2 BF-CCA",
+    manualOnly: true,
+    students: [],
+    catalog: []
+  },
+  {
+    id: "m_meo1",
+    direction: "DPGELM",
+    programme: "Masters & Programme Grande École",
+    niveau: "Master 1 — Management des Entreprises et Organisations (MEO)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe Master 1 MEO",
+    manualOnly: true,
+    students: [],
+    catalog: []
+  },
+  {
+    id: "m_meo2",
+    direction: "DPGELM",
+    programme: "Masters & Programme Grande École",
+    niveau: "Master 2 — Management des Entreprises et Organisations (MEO)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe Master 2 MEO",
+    manualOnly: true,
+    students: [],
+    catalog: []
+  },
+  {
+    id: "m_pge",
+    direction: "DPGELM",
+    programme: "Masters & Programme Grande École",
+    niveau: "Master — Programme Grande École (PGE)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe Master PGE",
+    manualOnly: true,
+    students: [],
+    catalog: []
+  },
+  // --- DPECN : Executive, Campus Numérique & Expertise Comptable ---
+  {
+    id: "decogef",
+    direction: "DPECN",
+    programme: "CESAG Expertise Comptable",
+    niveau: "DECOGEF — Diplôme d'Études de Comptabilité et Gestion Financière (UEMOA)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe DECOGEF",
+    manualOnly: true,
+    students: [],
+    catalog: []
+  },
+  {
+    id: "descogef",
+    direction: "DPECN",
+    programme: "CESAG Expertise Comptable",
+    niveau: "DESCOGEF — Diplôme d'Études Supérieures de Comptabilité (UEMOA)",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe DESCOGEF",
+    manualOnly: true,
+    students: [],
+    catalog: []
+  },
+  {
+    id: "exec_mba",
+    direction: "DPECN",
+    programme: "CESAG Executive & Formation Continue",
+    niveau: "Executive MBA & Formations Professionnelles Certifiantes",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe Executive MBA",
+    manualOnly: true,
+    students: [],
+    catalog: []
+  },
+  {
+    id: "exec_sante",
+    direction: "DPECN",
+    programme: "CESAG Économie de la Santé",
+    niveau: "Master Économie de la Santé & Management des Services de Santé",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe Santé",
+    manualOnly: true,
+    students: [],
+    catalog: []
+  },
+  {
+    id: "online_campus",
+    direction: "DPECN",
+    programme: "CESAG Online / Campus Numérique",
+    niveau: "Formations en Ligne & Campus Numérique",
+    anneeAcademique: "2026-2027",
+    promoLabel: "classe Online",
+    manualOnly: true,
+    students: [],
+    catalog: []
   }
 ];
 
@@ -1030,7 +1166,7 @@ window.PROGRAMS = [
   var manualRowSeq = 0;
   var lastSubmission = null;
 
-  var progSel = $('prog-select'), niveauSel = $('niveau-select'), formEl = $('form');
+  var dirSel = $('dir-select'), progSel = $('prog-select'), niveauSel = $('niveau-select'), formEl = $('form');
   var studentSel = $('student'), matieresEl = $('matieres'), manualFieldsEl = $('manual-fields');
   var submitBtn = $('submit-btn'), exoCheck = $('exo-check'), exoFieldsEl = $('exo-fields'), exoMotif = $('exo-motif');
   var promoSelectEl = $('m-promo-select'), promoCustomEl = $('m-promo-custom'), promoHiddenEl = $('m-promo');
@@ -1076,13 +1212,7 @@ window.PROGRAMS = [
     return list.sort(function(a,b){ return a.nom.localeCompare(b.nom, 'fr'); });
   }
 
-  // ---------- Sélection programme / niveau ----------
-  var programmeNames = [];
-  PROGRAMS.forEach(function(p){ if (programmeNames.indexOf(p.programme) === -1) programmeNames.push(p.programme); });
-  programmeNames.forEach(function(name){
-    var o = document.createElement('option'); o.value = name; o.textContent = name; progSel.appendChild(o);
-  });
-
+  // ---------- Sélection direction / programme / niveau (Cascade fluide) ----------
   function resetSelect(sel, placeholder){
     sel.innerHTML = '';
     var o = document.createElement('option');
@@ -1090,9 +1220,23 @@ window.PROGRAMS = [
     sel.appendChild(o);
   }
 
-  function populateNiveaux(programme){
-    resetSelect(niveauSel, 'Choisir un niveau…');
-    PROGRAMS.filter(function(p){ return p.programme === programme; }).forEach(function(p){
+  function populateProgrammes(direction){
+    resetSelect(progSel, 'Choisir un programme…');
+    resetSelect(niveauSel, 'Choisir d\'abord un programme…');
+    niveauSel.disabled = true;
+    var progs = [];
+    PROGRAMS.filter(function(p){ return p.direction === direction; }).forEach(function(p){
+      if (progs.indexOf(p.programme) === -1) progs.push(p.programme);
+    });
+    progs.forEach(function(name){
+      var o = document.createElement('option'); o.value = name; o.textContent = name; progSel.appendChild(o);
+    });
+    progSel.disabled = false;
+  }
+
+  function populateNiveaux(direction, programme){
+    resetSelect(niveauSel, 'Choisir une classe / niveau…');
+    PROGRAMS.filter(function(p){ return p.direction === direction && p.programme === programme; }).forEach(function(p){
       var o = document.createElement('option'); o.value = p.id; o.textContent = p.niveau; niveauSel.appendChild(o);
     });
     niveauSel.disabled = false;
@@ -1147,14 +1291,30 @@ window.PROGRAMS = [
     else if (current !== null){ current = null; manualFieldsEl.hidden = true; renderMatieres(); }
   });
 
+  if (dirSel){
+    dirSel.addEventListener('change', function(){
+      formEl.hidden = true;
+      $('result').hidden = true;
+      $('bar-sub').textContent = 'Sélectionnez votre programme puis votre classe pour accéder directement au formulaire.';
+      populateProgrammes(dirSel.value);
+    });
+  }
+
   progSel.addEventListener('change', function(){
     formEl.hidden = true;
-    $('bar-sub').textContent = 'Choisissez votre programme et votre niveau pour accéder à votre formulaire de reprise.';
-    populateNiveaux(progSel.value);
+    $('result').hidden = true;
+    var d = dirSel ? dirSel.value : 'DPGELM';
+    populateNiveaux(d, progSel.value);
   });
+
   niveauSel.addEventListener('change', function(){
     var prog = PROGRAMS.filter(function(p){ return p.id === niveauSel.value; })[0];
-    if (prog) activateProgram(prog);
+    if (prog){
+      activateProgram(prog);
+      setTimeout(function(){
+        formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
   });
 
   // ---------- Matières (saisie manuelle) ----------
@@ -1165,7 +1325,7 @@ window.PROGRAMS = [
 
   function addManualRow(){
     manualRowSeq += 1;
-    manualRows.push({ id: manualRowSeq, matId: MODULE_CATALOG.length ? '' : CUSTOM_MODULE, customNom:'', sem:'', h:'' });
+    manualRows.push({ id: manualRowSeq, matId: MODULE_CATALOG.length ? '' : CUSTOM_MODULE, customNom:'', sem:'', h:'', enseignant:'' });
     renderManualRows();
   }
 
@@ -1187,11 +1347,13 @@ window.PROGRAMS = [
         matField = '<select data-field="matId" data-row="' + r.id + '">' + opts + '</select>' +
           (isCustom ? '<input type="text" data-field="customNom" data-row="' + r.id + '" value="' + esc(r.customNom) + '" placeholder="Intitulé exact de la matière" style="margin-top:6px">' : '');
       }
+      var ensInp = '<input type="text" data-field="enseignant" data-row="' + r.id + '" value="' + esc(r.enseignant || '') + '" placeholder="Enseignant(e)">';
       return '<div class="mrow">' +
         '<div class="field"><label>Matière</label>' + matField + '</div>' +
         '<div class="field narrow"><label>Semestre</label><input type="text" data-field="sem" data-row="' + r.id + '" value="' + esc(r.sem) + '" placeholder="ex. S1"></div>' +
         '<div class="field narrow"><label>Heures' + (cat ? ' (auto)' : '') + '</label>' +
         '<input type="number" min="0" step="1" data-field="h" data-row="' + r.id + '" value="' + esc(hVal) + '"' + (cat ? ' disabled' : '') + ' placeholder="h"></div>' +
+        '<div class="field" style="min-width:140px"><label>Enseignant(e)</label>' + ensInp + '</div>' +
         '<button type="button" class="remove" data-remove="' + r.id + '" aria-label="Retirer cette matière">✕</button></div>';
     }).join('');
     html += '<button type="button" class="add-row" id="add-row-btn">+ Ajouter une matière</button>';
@@ -1264,7 +1426,7 @@ window.PROGRAMS = [
         var cat = catEntryOf(r);
         var nom = cat ? cat.nom : r.customNom.trim();
         var h = cat ? cat.h : parseFloat(r.h);
-        return { sem: (r.sem || '').trim() || '—', nom: nom, h: h, custom: true, catalog: !!cat };
+        return { sem: (r.sem || '').trim() || '—', nom: nom, h: h, enseignant: (r.enseignant || '').trim(), custom: true, catalog: !!cat };
       }).filter(function(m){ return m.nom && (m.catalog || m.h > 0); });
     }
     var s = STUDENTS[current], picked = [];
@@ -1323,6 +1485,7 @@ window.PROGRAMS = [
     if (isRestoringDraft) return;
     try {
       var draft = {
+        dir: dirSel ? dirSel.value : 'DPGELM',
         prog: progSel.value,
         niveau: niveauSel.value,
         nom: $('m-nom').value,
@@ -1352,9 +1515,14 @@ window.PROGRAMS = [
       var d = JSON.parse(raw);
       if (!d || typeof d !== 'object') return;
       isRestoringDraft = true;
+      if (d.dir && dirSel){
+        dirSel.value = d.dir;
+        populateProgrammes(d.dir);
+      }
       if (d.prog && Array.prototype.some.call(progSel.options, function(o){ return o.value === d.prog; })){
         progSel.value = d.prog;
-        populateNiveaux(d.prog);
+        var curD = d.dir || (dirSel ? dirSel.value : 'DPGELM');
+        populateNiveaux(curD, d.prog);
         if (d.niveau){
           var prog = PROGRAMS.filter(function(p){ return p.id === d.niveau; })[0];
           if (prog){
@@ -1506,11 +1674,14 @@ window.PROGRAMS = [
     var sigEtudiantHTML = sub.signatureDataUrl
       ? '<div class="line" style="margin-top:10px;padding-top:4px"><span style="font-size:11px;color:#475569">Signature de l\'étudiant(e) :</span><img src="' + sub.signatureDataUrl + '" alt="Signature" style="max-height:48px;max-width:170px;display:block;margin:3px 0 0"></div>'
       : '<div class="line">Signature de l\'étudiant(e)</div>';
+    var dirInst = (activeProgram && activeProgram.direction === 'DPECN')
+      ? 'CESAG — Direction du Programme Executive et Campus Numérique (DPECN)'
+      : 'CESAG — Direction des Programmes Grande École, Licences et Masters (DPGELM)';
     var body =
       '<div class="doc-head">' +
         '<img class="doc-logo" src="' + logoSrc + '" alt="Logo CESAG">' +
         '<div class="doc-head-main">' +
-          '<div class="inst">CESAG — Direction des Programmes Grande École, Licences et Masters</div>' +
+          '<div class="inst">' + esc(dirInst) + '</div>' +
           '<h2>Demande de reprise &amp; facture associée</h2>' +
           '<div class="doc-ref">Réf. ' + esc(sub.ref) + ' · ' + esc(sub.dateStr) + '</div>' +
         '</div>' +
@@ -1565,9 +1736,10 @@ window.PROGRAMS = [
 
     var rows = sub.picked.map(function(m){
       var semLabel = m.custom ? m.sem : 'Semestre ' + m.sem;
+      var ensTag = m.enseignant ? (' <span style="color:#64748b;font-size:11px;font-style:italic">— Ens. ' + esc(m.enseignant) + '</span>') : '';
       return '<tr>' +
         '<td>' + esc(semLabel) + '</td>' +
-        '<td>' + esc(m.nom) + '</td>' +
+        '<td>' + esc(m.nom) + ensTag + '</td>' +
         '<td class="num">' + (m.h > 0 ? (m.h + ' h') : '—') + '</td>' +
         '<td class="num">' + fmt(m.h * TARIF_HEURE) + '</td>' +
         '</tr>';
@@ -1695,7 +1867,7 @@ window.PROGRAMS = [
       etudiant: { nom: s.nom, prenom: s.prenom, code: s.code, promo: s.promo, horsListe: s.horsListe },
       contact: { email: sub.email, tel: sub.tel },
       matieres: sub.picked.map(function(m){
-        return { sem: m.sem, nom: m.nom, h: m.h, montant: m.h * TARIF_HEURE, saisieLibre: !!m.custom };
+        return { sem: m.sem, nom: m.nom, h: m.h, enseignant: m.enseignant || '', montant: m.h * TARIF_HEURE, saisieLibre: !!m.custom };
       }),
       totaux: { heures: sub.totaux.heures, tarifHeure: TARIF_HEURE, coutPedagogique: sub.totaux.cout,
         fraisInscription: sub.totaux.frais, total: sub.totaux.total },
@@ -1747,7 +1919,8 @@ window.PROGRAMS = [
     }
     setStatus('wait', 'Envoi de votre demande au secrétariat…');
     postPayload(payload).then(function(){
-      setStatus('ok', 'Votre demande a bien été transmise au secrétariat (réf. ' + payload.ref + ').');
+      var emailNotice = (payload.contact && payload.contact.email) ? (' Une copie de confirmation a été envoyée à ' + payload.contact.email + '.') : '';
+      setStatus('ok', 'Votre demande a bien été transmise au secrétariat (réf. ' + payload.ref + ').' + emailNotice);
     }).catch(function(){
       var q = readQueue(); q.push(payload); writeQueue(q);
       setStatus('wait', "Envoi impossible pour l'instant (connexion). Votre demande sera renvoyée automatiquement à la prochaine ouverture de cette page ; vous pouvez aussi télécharger le fichier .json ci-dessous.");
@@ -1785,11 +1958,9 @@ window.PROGRAMS = [
     } else if (h.indexOf('#dossier') === 0 && lastSubmission){
       formEl.hidden = true;
       $('result').hidden = false;
-      if (h === '#dossier-lettre-dg' && $('tab-doc-letter')){
-        $('tab-doc-letter').click();
-      } else if ($('tab-doc-fiche')){
-        $('tab-doc-fiche').click();
-      }
+      $('doc').hidden = false;
+      $('doc-letter').hidden = false;
+      document.title = 'Dossier complet — ' + lastSubmission.ref;
     }
   });
 
@@ -1928,22 +2099,16 @@ window.PROGRAMS = [
     lastSubmission.payload = buildPayload(lastSubmission);
     $('doc').innerHTML = buildDocHTML(lastSubmission, false);
     $('doc-letter').innerHTML = buildLetterHTML(lastSubmission, false);
-    var tabFicheInit = $('tab-doc-fiche');
-    var tabLetterInit = $('tab-doc-letter');
-    if (tabFicheInit && tabLetterInit){
-      tabFicheInit.classList.add('active');
-      tabLetterInit.classList.remove('active');
-      $('doc').hidden = false;
-      $('doc-letter').hidden = true;
-    }
+    $('doc').hidden = false;
+    $('doc-letter').hidden = false;
     formEl.hidden = true;
     $('result').hidden = false;
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setViewAddress('dossier', 'Dossier complet — ' + lastSubmission.ref);
     sendSubmission(lastSubmission.payload);
   });
 
-  // ---------- Impression directe / PDF (Les 2 pièces vs Pièce unique) ----------
+  // ---------- Impression directe / PDF (Dossier complet) ----------
   function printBothPieces(){
     if (!lastSubmission) return;
     document.body.classList.remove('print-letter-mode');
@@ -1955,52 +2120,13 @@ window.PROGRAMS = [
     window.print();
     setTimeout(function(){
       document.body.classList.remove('print-both-mode');
-      var isTabLetter = $('tab-doc-letter') && $('tab-doc-letter').classList.contains('active');
-      if (docFiche) docFiche.hidden = isTabLetter;
-      if (docLetter) docLetter.hidden = !isTabLetter;
+      if (docFiche) docFiche.hidden = false;
+      if (docLetter) docLetter.hidden = false;
     }, 1200);
-  }
-
-  function printCurrentPiece(){
-    if (!lastSubmission) return;
-    var isTabLetter = $('tab-doc-letter') && $('tab-doc-letter').classList.contains('active');
-    document.body.classList.remove('print-both-mode');
-    if (isTabLetter){
-      document.body.classList.add('print-letter-mode');
-    } else {
-      document.body.classList.remove('print-letter-mode');
-    }
-    window.print();
-    setTimeout(function(){
-      document.body.classList.remove('print-letter-mode');
-    }, 1200);
-  }
-
-  // Onglets de prévisualisation (Fiche vs Lettre DG)
-  var tabFicheEl = $('tab-doc-fiche');
-  var tabLetterEl = $('tab-doc-letter');
-  if (tabFicheEl && tabLetterEl){
-    tabFicheEl.addEventListener('click', function(){
-      tabFicheEl.classList.add('active');
-      tabLetterEl.classList.remove('active');
-      $('doc').hidden = false;
-      $('doc-letter').hidden = true;
-      if (lastSubmission){
-        setViewAddress('dossier-fiche', 'Fiche de reprise — ' + lastSubmission.ref);
-      }
-    });
-    tabLetterEl.addEventListener('click', function(){
-      tabLetterEl.classList.add('active');
-      tabFicheEl.classList.remove('active');
-      $('doc').hidden = true;
-      $('doc-letter').hidden = false;
-      if (lastSubmission){
-        setViewAddress('dossier-lettre-dg', 'Lettre officielle au DG — ' + lastSubmission.ref);
-      }
-    });
   }
 
   if ($('print-both-btn')) $('print-both-btn').addEventListener('click', printBothPieces);
+  if ($('print-both-btn-bottom')) $('print-both-btn-bottom').addEventListener('click', printBothPieces);
 
   function returnToLandingPage(){
     clearDraft();
@@ -2040,15 +2166,11 @@ window.PROGRAMS = [
     if (exoFileInfoEl) exoFileInfoEl.textContent = "Si vous joignez une photo (JPG/PNG), elle sera directement intégrée en Annexe (Page 2) de votre fiche PDF !";
 
     // Réinitialisation des menus déroulants vers la page d'accueil
-    if (programmeNames.length === 1){
-      progSel.value = programmeNames[0];
-      populateNiveaux(programmeNames[0]);
-      niveauSel.selectedIndex = 0;
-    } else {
-      progSel.selectedIndex = 0;
-      resetSelect(niveauSel, "Choisir d'abord un programme…");
-      niveauSel.disabled = true;
-    }
+    if (dirSel) dirSel.selectedIndex = 0;
+    resetSelect(progSel, "Choisir d'abord une direction…");
+    progSel.disabled = true;
+    resetSelect(niveauSel, "Choisir d'abord un programme…");
+    niveauSel.disabled = true;
     $('bar-sub').textContent = 'Choisissez votre programme et votre niveau pour accéder à votre formulaire de reprise.';
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2066,9 +2188,9 @@ window.PROGRAMS = [
 
   initSignaturePad();
   restoreDraft();
-  if (!activeProgram && programmeNames.length === 1){
-    progSel.value = programmeNames[0];
-    populateNiveaux(programmeNames[0]);
+  if (!activeProgram && dirSel){
+    dirSel.value = 'DPGELM';
+    populateProgrammes('DPGELM');
   }
   if (!activeProgram){
     setViewAddress('programme', 'CESAG — Choix du programme de reprise');

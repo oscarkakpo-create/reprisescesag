@@ -125,6 +125,61 @@ function doPost(e) {
       ]);
     });
 
+    // 3. Envoi automatique d'une copie récapitulative par email au demandeur
+    var studentEmail = (data.contact && data.contact.email) ? String(data.contact.email).trim() : "";
+    if (studentEmail && studentEmail.indexOf("@") !== -1) {
+      try {
+        var studentNomComplet = [
+          (data.etudiant && data.etudiant.prenom) || "",
+          (data.etudiant && data.etudiant.nom) || ""
+        ].join(" ").trim();
+        if (!studentNomComplet) studentNomComplet = "Étudiant(e)";
+
+        var subject = "CESAG — Copie de votre demande de reprise d'études [" + (data.ref || "") + "]";
+
+        var bodyText = "Bonjour " + studentNomComplet + ",\n\n" +
+          "Nous vous confirmons la bonne réception de votre demande de reprise d'unités d'enseignement pour l'année académique 2026-2027 au CESAG.\n\n" +
+          "RÉCAPITULATIF DE VOTRE DOSSIER :\n" +
+          "--------------------------------------------------\n" +
+          "• Référence du dossier : " + (data.ref || "") + "\n" +
+          "• Date d'enregistrement : " + (data.submittedAt ? new Date(data.submittedAt).toLocaleString("fr-FR") : new Date().toLocaleString("fr-FR")) + "\n" +
+          "• Programme : " + ((data.programme && data.programme.programme) || "CESAG PRO") + "\n" +
+          "• Niveau / Filière : " + ((data.programme && data.programme.niveau) || "") + "\n" +
+          "• Promotion : " + ((data.etudiant && data.etudiant.promo) || "") + "\n" +
+          "• N° Étudiant : " + ((data.etudiant && data.etudiant.code) || "Non renseigné") + "\n" +
+          "• Téléphone : " + ((data.contact && data.contact.tel) || "") + "\n\n" +
+          "MATIÈRES SÉLECTIONNÉES (" + matieres.length + ") :\n" +
+          matieres.map(function(m, idx) {
+            var s = m.saisieLibre ? m.sem : ("Semestre " + m.sem);
+            return "  " + (idx + 1) + ". " + m.nom + " (" + s + ") — " + m.h + "h — " + (m.montant || (m.h * 2500)) + " FCFA";
+          }).join("\n") + "\n\n" +
+          "DÉCOMPTE FINANCIER :\n" +
+          "• Volume horaire total : " + ((data.totaux && data.totaux.heures) || 0) + " h\n" +
+          "• Coût pédagogique (2 500 F/h) : " + ((data.totaux && data.totaux.coutPedagogique) || 0) + " FCFA\n" +
+          "• Frais d'inscription forfaitaires : " + ((data.totaux && data.totaux.fraisInscription) || 0) + " FCFA\n" +
+          "• TOTAL À RÉGLER : " + ((data.totaux && data.totaux.total) || 0) + " FCFA\n" +
+          (data.exoneration && data.exoneration.demandee ? ("• Exonération déclarée : OUI\n  Motif : " + (data.exoneration.motif || "Sur justificatif médical ou d'inscription tardive") + "\n") : "") +
+          "--------------------------------------------------\n\n" +
+          "PROCHAINES ÉTAPES :\n" +
+          "1. Conservez précieusement ce message électronique et votre numéro de référence.\n" +
+          "2. Présentez votre Fiche d'inscription signée ainsi que votre Lettre officielle adressée à Mme le Directeur Général au secrétariat pédagogique (DPGELM).\n" +
+          "3. Procédez au règlement des frais auprès de l'agence comptable du CESAG.\n\n" +
+          "Pour toute question :\n" +
+          "• mame.coulibaly@cesag.edu.sn\n" +
+          "• isabelle.Mandiouba@cesag.edu.sn\n" +
+          "• jean.agopome@cesag.edu.sn\n\n" +
+          "Département DPGELM — Centre Africain d'Études Supérieures en Gestion (CESAG), Dakar";
+
+        MailApp.sendEmail({
+          to: studentEmail,
+          subject: subject,
+          body: bodyText
+        });
+      } catch (mailErr) {
+        Logger.log("Erreur lors de l'envoi de la copie email: " + mailErr);
+      }
+    }
+
     return jsonResponse({ status: "ok", ref: data.ref });
   } catch (err) {
     return jsonResponse({ status: "error", message: String(err) });
